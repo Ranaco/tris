@@ -9,13 +9,13 @@ import { RiNotification4Fill, RiNotification4Line} from 'react-icons/ri'
 import { CgMenuLeft, CgMenuGridO } from 'react-icons/cg'
 import { MdArrowDropDown } from 'react-icons/md'
 
+
 const CapsuleSearchBar = ({ handleChange, query }) => {
-  
-  const size = getWindowDimensions()
+const size = getWindowDimensions()
   return(
        <Input placeholder = "#search"
     type = "text"
-    w = {size.width < "960" ? "30vw" : "300px"}
+    w = {size.width < "960" ? "30vw" : "400px"}
     borderRadius = "30px"
     color = "wheat"
     h = "45"
@@ -60,7 +60,7 @@ export const Divider = ({ css, height, width, bgColor = "lightGrey" }, props) =>
 }
 
 const Navbar = ({ href, path, target, children, ...props}) => {
-  
+  const size = getWindowDimensions() 
   const [ query, setQuery ] = useState("")
   const handleChange = (event) => setQuery(event.target.value)
   return(
@@ -77,7 +77,8 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       alignItems = "center"
       justifyContent = "start"
       >
-      <CapsuleSearchBar handleChange = {handleChange} query = {query}/>
+      {size.width < "710" ? undefined :  <CapsuleSearchBar handleChange = {handleChange} query = {query}/>
+}
       <div style = {{ flex: "1"}}/>
       <Box
       mr = "20px"

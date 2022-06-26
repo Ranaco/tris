@@ -1,32 +1,78 @@
 import { StyledDiv } from '../lib/custom-component'
 import getWindowDimensions from '../lib/device-viewport.js'
 import ProfileCard from '../components/profile_card'
-import { Flex, Text, Center, Square, Box } from '@chakra-ui/react'
+import FollowingListTile from '../components/following_list_tile'
+import { Show, Hide, Flex, Text, Center, Square, Box } from '@chakra-ui/react'
 import ProfileImage from '../public/images/profile.png'
 import WallUrl from '../public/images/landscape.png'
+import dummy_data from '../lib/dummy_data'
+import BackgroundImage from '../public/images/background.jpg'
+import CreatePostTile from '../components/create_post_tile.js'
+import { useState } from 'react'
+import PostTile from '../components/post_tile'
+import DummyPostData from '../lib/dummy_post_data'
+import TrendForYou from '../components/trend_for_you'
+import TrendingData from '../lib/dummy_trending_data'
 
 const Homepage = () => {
+
+  const [post, setPost] = useState("")
   const windowDimension = getWindowDimensions()
-  return( 
-    <Flex color='white' mt = "10px" gap = "20px" w = "95%" flexDirection = "row">
-  <Box w='30%' h = "100vh" flexBasis="70%" display={'flex'} alignItems = {'start'} justifyContent = {'start'} flexDirection = "column">
-      <ProfileCard 
-    profileUrl = {ProfileImage}
-    wallUrl = {WallUrl}
-    name = "Vishal_kr7"
-    userName = "vishal_002"
-    following = "200"
-    followers = "5000"
-    bio = "Hello there this is Vishal"
-  />
-  </Box>
-  <Square h = "100vh" flex= '1' size='150px' flexBasis="100%">
-    <Text>Box 2</Text>
-  </Square>
-  <Box w = "30vw" flexBasis="70%">
-    <Text>Box 3</Text>
-  </Box>
-</Flex>
+
+  const handleChange = (event) => {
+    setPost(event.target.value)
+  }
+
+  return (
+    <Flex
+    backgroundImage = 'url(https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80)'
+    backgroundPosition = "center"
+    color='white' 
+    mt="70px"
+    gap="20px"
+    w="95%"
+    flexDirection="row">
+      <Show breakpoint='(min-height: 750px)'>
+        <Hide breakpoint='(max-width: 1090px)'>
+          <Box w='30%' gap="10px" overflowY = 'scroll' h="90vh" flexBasis="60%" display={'flex'} alignItems={'start'} justifyContent={'start'} flexDirection="column">
+            <ProfileCard
+              profileUrl={ProfileImage}
+              wallUrl={WallUrl}
+              name="Vishal_kr7"
+              userName="vishal_002"
+              following="200"
+              followers="5000"
+              bio="Hello there this is Vishal"
+            />
+            <FollowingListTile followers={dummy_data} />
+          </Box>
+        </Hide>
+      </Show>
+      <Square display={'flex'} alignItems={'start'} gap = "10px" overflowY = "scroll" justifyContent={'start'} flexDirection="column" h="90vh" flex='1' flexBasis="110%">
+        <CreatePostTile
+         onCameraClick={() => console.log("hello there")} 
+         onListClick={() => console.log("hello List there")}
+          onGalleryClick={() => console.log("hello Gallery there")}
+           onScheduleClick={() => console.log("hello Schedule there")} 
+           onChange={handleChange} 
+           value={post} 
+           profileUrl={ProfileImage} />
+        <Box flexDirection = "column" w = "100%" gap = "10px" display = "flex" alignItems = 'center' justifyContent = "center">
+          { 
+            DummyPostData.map((post, index) => {
+              return <PostTile key={index} post={post} />
+            })
+          }
+        </Box>
+    </Square>
+      <Show breakpoint='(min-height: 750px)'>
+        <Hide breakpoint='(max-width: 1090px)'>
+      <Box w="30vw" flexBasis="70%">
+        <TrendForYou data = { TrendingData } />
+      </Box>
+        </Hide>
+      </Show>
+    </Flex>
   )
 }
 

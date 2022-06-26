@@ -1,12 +1,10 @@
-import { Box, Container, Text, Input, Heading, Link, useColorModeValue } from '@chakra-ui/react'
-import NextLink from 'next/link'
+import { Box, Container, Text, Input } from '@chakra-ui/react'
 import getWindowDimensions from '../lib/device-viewport'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { FaInbox,
         } from 'react-icons/fa'
-import { RiNotification4Fill, RiNotification4Line} from 'react-icons/ri'
-import { CgMenuLeft, CgMenuGridO } from 'react-icons/cg'
+import { RiNotification4Fill } from 'react-icons/ri'
+import { CgMenuGridO } from 'react-icons/cg'
 import { MdArrowDropDown } from 'react-icons/md'
 
 
@@ -14,13 +12,13 @@ const CapsuleSearchBar = ({ handleChange, query }) => {
 const size = getWindowDimensions()
   return(
        <Input placeholder = "#search"
-    type = "text"
-    w = {size.width < "960" ? "30vw" : "400px"}
+    type = "search"
+    color = 'white'
+    w = {size.width < "960" ? "30vw" : "330px"}
     borderRadius = "30px"
-    color = "wheat"
+    backgroundColor = "lightGrey"
     h = "45"
     marginLeft = "45px"
-    bgColor = "textGrey"
     value = {query}
     onChange = {handleChange}
     border = "undefined"/>
@@ -31,9 +29,11 @@ const ProfileButton = () => {
   return(
     <Container
     as = "span"
+    color = 'white'
     _hover = {{ fontWeight: 'semibold', boxShadow: '0px 2px 5px rgba(0,0,0,0.2)'}}
     cursor = "pointer"
     display = "flex"
+    color = 'white'
     alignItems = "center"
     justifyContent = "start"
     p = { 2 } 
@@ -53,7 +53,7 @@ const ProfileButton = () => {
   )
 }
 
-export const Divider = ({ css, height, width, bgColor = "lightGrey" }, props) => {
+export const CustomDivider = ({ css, height, width, bgColor = "lightGrey" }, props) => {
   return(
     <Container height = {height} css = {css} width = {width} opacity = "0.5" bgColor = {bgColor} p = { 0 } m = { 0 } {...props}/>
   )
@@ -78,19 +78,21 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       justifyContent = "start"
       >
       {size.width < "710" ? undefined :  <CapsuleSearchBar handleChange = {handleChange} query = {query}/>
-}
-      <div style = {{ flex: "1"}}/>
+} {size.width < "710" ? undefined : <div style = {{ flex: "1"}}/>}
+      
       <Box
       mr = "20px"
       spacing = "24px" 
       display = "flex"
+      wrap = "wrap"
       p = { 0 }
       alignItems = "center" 
       justifyContent = "center"
       gap = "15px">
         <FaInbox color = "lightGrey" size = "30" style = {{ cursor: "pointer" }}/>
-        <RiNotification4Fill size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/> 
-        <Divider height = "40px" bgColor = "lightGrey"  width = "1px"/>
+        <RiNotification4Fill size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/>
+        {size.width > "710" ? undefined : <div style = {{ flex: "1"}}/>}
+        <CustomDivider height = "40px" bgColor = "lightGrey"  width = "1px"/>
         <ProfileButton/>
         <CgMenuGridO style = {{ cursor: "pointer"}} color = "lightGrey" size = "30px"/>
     </Box>

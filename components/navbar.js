@@ -6,7 +6,8 @@ import { FaInbox,
 import { RiNotification4Fill } from 'react-icons/ri'
 import { CgMenuGridO } from 'react-icons/cg'
 import { MdArrowDropDown } from 'react-icons/md'
-
+import { SiMarketo } from 'react-icons/si'
+import NextLink from 'next/link'
 
 const CapsuleSearchBar = ({ handleChange, query }) => {
 const size = getWindowDimensions()
@@ -89,6 +90,11 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       alignItems = "center" 
       justifyContent = "center"
       gap = "15px">
+        <NextLink href = 'marketplace'>
+          <a>  
+            <SiMarketo color = 'lightGrey' size = '30' style = {{ cursor : 'pointer' }}/>
+          </a> 
+        </NextLink>
         <FaInbox color = "lightGrey" size = "30" style = {{ cursor: "pointer" }}/>
         <RiNotification4Fill size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/>
         {size.width > "710" ? undefined : <div style = {{ flex: "1"}}/>}

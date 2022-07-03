@@ -31,7 +31,7 @@ const Main = ({ children, router }) => {
     <StyledDiv  as = "main">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Tris - Home </title>
+        <title> Tris - { router.asPath == '/marketplace' ? 'Marketplace' : 'Home'} </title>
       </Head>
         <NavBar route = {router.asPath}/>
           <StyledDiv

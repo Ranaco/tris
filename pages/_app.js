@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import Layout, { ScrollBarStyle } from '../components/layouts/main'
 import theme from '../lib/theme.js'
-import Font from '../components/fonts'
+import { Megrim,  MPLUS, Tillana, ShadowsIntoLight, Rubik, PermanentMarker, Sacramento  } from '../components/fonts'
 
 const Website = ({ Component, pageProps, router}) => {
 
@@ -9,13 +9,25 @@ const Website = ({ Component, pageProps, router}) => {
 
   return getLayout ? (
     getLayout(<ChakraProvider theme = {theme}>
-    <Font/>
+    <MPLUS/>
+    <ShadowsIntoLight/>
+      <Rubik/>
+      <Sacramento/>
+      <Tillana/>
+      <Megrim/>
+      <PermanentMarker/>
     <ScrollBarStyle/>
       <Component {...pageProps} key = {router.route}/>
     </ChakraProvider>) 
   ) : (
     <ChakraProvider theme = {theme}>
-    <Font/>
+    <MPLUS/>
+    <ShadowsIntoLight/>
+    <Rubik/>
+    <Tillana/>
+    <Megrim/>
+    <Sacramento/>
+    <PermanentMarker/>
     <ScrollBarStyle/>
      <Layout router={router}>
      <Component {...pageProps} key = {router.route}/>

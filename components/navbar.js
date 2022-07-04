@@ -7,8 +7,8 @@ import { RiNotification4Fill } from 'react-icons/ri'
 import { CgMenuGridO } from 'react-icons/cg'
 import { MdArrowDropDown } from 'react-icons/md'
 import { SiMarketo } from 'react-icons/si'
-import NextLink from 'next/link'
-
+import { StyledDiv } from '../lib/custom-component'
+import { useRouter } from 'next/router'
 const CapsuleSearchBar = ({ handleChange, query }) => {
 const size = getWindowDimensions()
   return(
@@ -27,14 +27,17 @@ const size = getWindowDimensions()
 }
 
 const ProfileButton = () => {
+
+  const router = useRouter()
+
   return(
     <Container
+    onClick = {() => router.push('/profile')}
     as = "span"
     color = 'white'
     _hover = {{ fontWeight: 'semibold', boxShadow: '0px 2px 5px rgba(0,0,0,0.2)'}}
     cursor = "pointer"
     display = "flex"
-    color = 'white'
     alignItems = "center"
     justifyContent = "start"
     p = { 2 } 
@@ -61,6 +64,7 @@ export const CustomDivider = ({ css, height, width, bgColor = "lightGrey" }, pro
 }
 
 const Navbar = ({ href, path, target, children, ...props}) => {
+  const router = useRouter()
   const size = getWindowDimensions() 
   const [ query, setQuery ] = useState("")
   const handleChange = (event) => setQuery(event.target.value)
@@ -79,7 +83,7 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       justifyContent = "start"
       >
       {size.width < "710" ? undefined :  <CapsuleSearchBar handleChange = {handleChange} query = {query}/>
-} {size.width < "710" ? undefined : <div style = {{ flex: "1"}}/>}
+} {size.width < "710" ? undefined : <StyledDiv style = {{ flex: "1"}}/>}
       
       <Box
       mr = "20px"
@@ -90,14 +94,10 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       alignItems = "center" 
       justifyContent = "center"
       gap = "15px">
-        <NextLink href = 'marketplace'>
-          <a>  
-            <SiMarketo color = 'lightGrey' size = '30' style = {{ cursor : 'pointer' }}/>
-          </a> 
-        </NextLink>
+            <SiMarketo color = 'lightGrey' size = '30' style = {{ cursor : 'pointer' }} onClick = {() => router.push('/marketplace')}/>
         <FaInbox color = "lightGrey" size = "30" style = {{ cursor: "pointer" }}/>
         <RiNotification4Fill size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/>
-        {size.width > "710" ? undefined : <div style = {{ flex: "1"}}/>}
+        {size.width > "710" ? undefined : <StyledDiv style = {{ flex: "1"}}/>}
         <CustomDivider height = "40px" bgColor = "lightGrey"  width = "1px"/>
         <ProfileButton/>
         <CgMenuGridO style = {{ cursor: "pointer"}} color = "lightGrey" size = "30px"/>

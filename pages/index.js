@@ -1,14 +1,13 @@
-import { StyledDiv } from '../lib/custom-component'
 import getWindowDimensions from '../lib/device-viewport.js'
 import ProfileCard from '../components/profile_card'
 import FollowingListTile from '../components/following_list_tile'
-import { Show, Hide, Flex, Text, Center, Square, Box } from '@chakra-ui/react'
+import { Show, Hide, Flex, Square, Box } from '@chakra-ui/react'
 import ProfileImage from '../public/images/profile.png'
+import { AppState } from './_app.js'
 import WallUrl from '../public/images/landscape.png'
 import dummy_data from '../lib/dummy_data'
-import BackgroundImage from '../public/images/background.jpg'
 import CreatePostTile from '../components/create_post_tile.js'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import PostTile from '../components/post_tile'
 import DummyPostData from '../lib/dummy_post_data'
 import TrendForYou from '../components/trend_for_you'
@@ -22,6 +21,7 @@ const Homepage = () => {
   const handleChange = (event) => {
     setPost(event.target.value)
   }
+  const [state, setState] = useContext(AppState)
 
   return (
     <Flex
@@ -44,6 +44,7 @@ const Homepage = () => {
               followers="5000"
               bio="Hello there this is Vishal"
             />
+            {state.account}
             <FollowingListTile followers={dummy_data} />
           </Box>
         </Hide>

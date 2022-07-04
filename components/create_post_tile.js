@@ -14,9 +14,6 @@ const CustomRoundedButton = ({ onClick, iconText, icon, text}) => {
     <StyledDiv _hover={{
       boxShadow: boxShoadow,
     }} display = "flex" alignItems = "center" gap = "8px"
-      onHoverStart = {() => {
-        console.log("hover start")
-      }}
      justifyContent = "space-evenly" p = "20px" w = "60%" h = "50px" borderRadius = "30px" onClick={onClick} border = "0.3px solid grey" cursor = "pointer">
     <Image src = {icon} width =  "20px" height =  "20px" alt = {iconText}/>
     {text}

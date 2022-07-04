@@ -71,7 +71,7 @@ const PostTile = ({ post }) => {
         </Box>
         <Box display = "flex" flexDirection={'row'} pt = "20px" color = "grey"  m = { 0 } w = "77%" ml = "11%" mr = '11%w'>
           { post.likes } likes
-          <div style={{ flex: '1' }} />
+          <StyledDiv style={{ flex: '1' }} />
           { post.comments } comments
         </Box>
         <ButtonGroup w = "100%" gap = "30px" pl = "11%" pr = "11%" pt = "4px" pb = "30px">

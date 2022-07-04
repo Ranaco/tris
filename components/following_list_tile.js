@@ -17,7 +17,7 @@ const FollowerTile = ({ profileUrl, name, userName }) => {
         @{ userName }
         </Text>
       </Flex>
-      <div style = {{ display: "flex"}} />
+      <StyledDiv style = {{ display: "flex"}} />
       <Button borderRadius={"100px"}  color = "black" bgColor = "white">Follow </Button>
   </StyledDiv>
   )

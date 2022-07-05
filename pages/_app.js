@@ -40,7 +40,6 @@ const Website = ({ Component, pageProps }) => {
   const router = useRouter()
   const [provider, setProvider] = useState(undefined)
   const [state, setState] = useState({
-    isAuthenticated: false,
     account: "0x0",
   })
 
@@ -48,13 +47,7 @@ const Website = ({ Component, pageProps }) => {
     if (web3Modal.cachedProvider) {
       connectWallet()
     }
-    setState((val) => {
-      return {
-        ...val,
-        isAuthenticated: provider !== undefined && provider.provider.isMetaMask !== false
-      }
-    })
-    if (provider === undefined || !state.isAuthenticated) {
+    if (window.localStorage.getItem('isAuthenticated') != 'true') {
       router.replace('/login')
     }
   }, [])
@@ -66,13 +59,9 @@ const Website = ({ Component, pageProps }) => {
     if (wallet.sequence) {
       (provider).sequence = wallet.sequence
     }
-    // setState((val) => {
-    //   return {
-    //     ...val,
-    //    provider: provider
-    //   }
-    // })
+    window.localStorage.setItem('isAuthenticated', 'true')
     getAccounts(provider)
+    
   }
 
   const getAccounts = async (provider) => {

@@ -35,7 +35,7 @@ const ProfileButton = () => {
     onClick = {() => router.push('/profile')}
     as = "span"
     color = 'white'
-    _hover = {{ fontWeight: 'semibold', boxShadow: '0px 2px 5px rgba(0,0,0,0.2)'}}
+    _hover = {{ boxShadow: '0px 2px 5px rgba(0,0,0,0.2)'}}
     cursor = "pointer"
     display = "flex"
     alignItems = "center"
@@ -49,7 +49,7 @@ const ProfileButton = () => {
     bgColor = "textGrey"
     >
      <Container borderRadius = "100px" w = "35px" h = "35px" p = { 0 } m = { 0 } bgColor = 'lightGrey' >    </Container>
-    <Text w = "70px" overflow= "hidden !important" textOverflow = "eclipse" display = "inline-block" whiteSpace = "nowrap" fontSize = "15px" color = "lightGrey">
+    <Text w = "70px" overflow= "hidden" textOverflow = "ellipses" display = "inline-block" whiteSpace = "nowrap" fontSize = "15px" color = "white">
       Vishal1934
     </Text>
     <MdArrowDropDown color = "lightGrey" size = "35"/>
@@ -96,7 +96,7 @@ const Navbar = ({ href, path, target, children, ...props}) => {
       gap = "15px">
             <SiMarketo color = 'lightGrey' size = '30' style = {{ cursor : 'pointer' }} onClick = {() => router.push('/marketplace')}/>
         <FaInbox color = "lightGrey" size = "30" style = {{ cursor: "pointer" }}/>
-        <RiNotification4Fill size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/>
+        <RiNotification4Fill onClick = {() => router.push('/signup')} size = "30" color = "lightGrey" style = {{ cursor: "pointer" }}/>
         {size.width > "710" ? undefined : <StyledDiv style = {{ flex: "1"}}/>}
         <CustomDivider height = "40px" bgColor = "lightGrey"  width = "1px"/>
         <ProfileButton/>

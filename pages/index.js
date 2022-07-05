@@ -7,7 +7,7 @@ import { AppState } from './_app.js'
 import WallUrl from '../public/images/landscape.png'
 import dummy_data from '../lib/dummy_data'
 import CreatePostTile from '../components/create_post_tile.js'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import PostTile from '../components/post_tile'
 import DummyPostData from '../lib/dummy_post_data'
 import TrendForYou from '../components/trend_for_you'
@@ -23,10 +23,15 @@ const Homepage = () => {
   }
   const [state, setState] = useContext(AppState)
 
+  useEffect(() => {
+   const logState = () => {
+        console.log('This is the state from homepage :: ', state)
+    }
+    logState()
+  }, [])
+
   return (
     <Flex
-    backgroundImage = 'url(https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80)'
-    backgroundPosition = "center"
     color='white' 
     mt="70px"
     gap="20px"
@@ -44,7 +49,6 @@ const Homepage = () => {
               followers="5000"
               bio="Hello there this is Vishal"
             />
-            {state.account}
             <FollowingListTile followers={dummy_data} />
           </Box>
         </Hide>

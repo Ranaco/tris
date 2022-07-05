@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { IoIosArrowBack } from 'react-icons/io'
 import Image from 'next/image'
 import { TbEdit } from 'react-icons/tb'
+import { AppState } from '../_app';
+import { useEffect, useContext } from 'react';
 
 const BackButton = () => {
   
@@ -28,12 +30,21 @@ const EditableImage = () => {
       <Box >
           <Image src = 'https://i.pravatar.cc/300?img=1' style = {{ borderRadius: "100px"}} alt = 'profile' height = '100px' width = '100px' />
       </Box>
-      <TbEdit style = {{ position: 'relative', top: '-110px', backgroundColor: 'black', borderRadius: '30px', right: '-80px', height: '30px', width: '30px', padding: '6px' }} size = '20px' color = 'white'/>
+      <TbEdit style = {{ position: 'relative', top: '-110px', backgroundColor: 'black', borderRadius: '30px', right: '-80px', height: '30px', width: '30px', padding: '6px' }} onClick={() => window.localStorage.setItem('isAuthenticated', 'false')} size = '20px' color = 'white'/>
     </Box>
   )
 }
 
 const Profile = () => {
+
+  const [ state, setState ] = useContext(AppState)
+
+  useEffect(() => {
+    const logState = () => {
+        console.log("This is the state from Profile :: ", state)
+    }  
+    logState()
+  }, [])
   
   const size = getWindowDimensions()
   const router = useRouter()
@@ -44,8 +55,6 @@ const Profile = () => {
     justifyContent = 'center'
     w = '100wh'
     h = '100vh'
-    bg = 'url(https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80)' 
-    bgPosition = 'center'
     >
      <StyledDiv w = '95%' h = '95%' css = {{ backdropFilter: 'blur(20px)'}} borderRadius = '20px' display = 'flex' alignItems = 'center' justifyContent = 'center' position = 'fixed'>
       <Box w = { size.width > '1050' ? '45%' : size.width < '744' ? '90%' : '60%'} h = '80%' bg = 'textGrey' borderRadius = '20px'>

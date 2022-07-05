@@ -53,7 +53,8 @@ const Login = () => {
         connectWallet()
       }
     }
-    if(state.isAuthenticated){
+    
+    if(window.localStorage.getItem('isAuthenticated') == 'true'){
       router.replace('/')
     }
   }, [])
@@ -77,14 +78,10 @@ const Login = () => {
       }
       setProvider(provider)
       console.log("This is the provider:: ", provider)
-      setState((val) => {
-        getAccounts(provider)
-        console.log("This is the state:: ", val)
-        return{
-          ...val,
-          isAuthenticated: provider.provider.isMetaMask !== false,
-        }
-      })
+      const res = getAccounts(provider)
+      console.log("This is the state :: ", state)
+      window.localStorage.setItem('isAuthenticated', 'true')
+      router.replace('/')
   }
 
   const getAccounts = async (provider) => {
@@ -94,18 +91,18 @@ const Login = () => {
     setState((val) => {
       return{
         ...val,
-        account: account
+        account: account,
+        isAuthenticated: provider != undefined && provider.provider.isMetaMask != false,
       }
     })
+    return account
     } else {
-      console.log("Provider not connected")
+      console.log("Provider was not connected")
     }
   }
 
   return (
     <Flex w='100%'
-      bg='url(https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80)'
-      backgroundPosition='center'
       p='30px'
       h='100vh'
       gap="30px"
@@ -130,7 +127,7 @@ const Login = () => {
             </Text>
             <StyledDiv w='80%' position='relative' top='28%' bg='textGrey' h='1px' />
             <Text position='relative' top='35%' fontFamily="'M PLUS Rounded 1c'" textAlign='center' color='lightGrey' fontSize='4.4em' alignSelf='center'>
-              Welcome to <span style={{ fontFamily: 'Megrim', fontWeight: 'bold' }}>Tris.</span><br /> <StyledDiv style={{ fontSize: '0.4em', textAlign: 'center', paddingTop: '10px' }}> The <span style={{ fontWeight: 'bold', textAlign: 'center' }}>web3</span> social media platform. </StyledDiv>
+              Welcome to <span style={{ fontFamily: 'Megrim', fontWeight: 'bold' }}>Tris.</span><br /> <StyledDiv style={{fontFamily: 'Shadows Into Light', fontSize: '0.4em', textAlign: 'center', paddingTop: '10px' }}> The <span style={{ fontWeight: 'bold', textAlign: 'center' }}>web3</span> social media platform! </StyledDiv>
             </Text>
           </StyledDiv>
         </Hide>

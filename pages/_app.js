@@ -61,7 +61,6 @@ const Website = ({ Component, pageProps }) => {
     }
     window.localStorage.setItem('isAuthenticated', 'true')
     getAccounts(provider)
-    
   }
 
   const getAccounts = async (provider) => {

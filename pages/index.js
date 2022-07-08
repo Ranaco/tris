@@ -33,7 +33,7 @@ const Homepage = () => {
   return (
     <Flex
     color='white' 
-    mt="70px"
+    pt="58.5px"
     gap="20px"
     w="95%"
     flexDirection="row">
@@ -47,7 +47,7 @@ const Homepage = () => {
               userName="vishal_002"
               following="200"
               followers="5000"
-              bio="Hello there this is Vishal"
+              bio={state.account}
             />
             <FollowingListTile followers={dummy_data} />
           </Box>

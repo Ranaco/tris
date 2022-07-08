@@ -9,14 +9,18 @@ import { TbEdit } from 'react-icons/tb'
 import { AppState } from '../_app';
 import { useEffect, useContext } from 'react';
 
-const BackButton = () => {
-  
-  const router = useRouter()
+const UserData = {
+  'name': 'Rosy',
+  'userName': 'red_velvet8059',
+  'bio': "Nothing funny but you should see it once!",
+  'email': 'rosy@gmail.com',
+}
 
+const BackButton = () => {
+  const router = useRouter()
   const handleClick = () => {
     history.go(-1)
   }
-
   return(
     <Box cursor = 'pointer' bg = 'lightGrey' justifyContent={'center'}  onClick={handleClick}  w = '40px' borderRadius = '10px' m = '10px' h = '40px' display = 'flex' alignItems = 'center' >
       <IoIosArrowBack size = '2.0rem' />
@@ -57,15 +61,18 @@ const Profile = () => {
     h = '100vh'
     >
      <StyledDiv w = '95%' h = '95%' css = {{ backdropFilter: 'blur(20px)'}} borderRadius = '20px' display = 'flex' alignItems = 'center' justifyContent = 'center' position = 'fixed'>
-      <Box w = { size.width > '1050' ? '45%' : size.width < '744' ? '90%' : '60%'} h = '80%' bg = 'textGrey' borderRadius = '20px'>
+      <Box w = { size.width > '1051' ? '45%' : size.width < '744' ? '90%' : '60%'} h = '80%' bg = 'textGrey' borderRadius = '20px'>
      <Flex alignItems = 'center' w = '100%' justifyContent = 'start'>
           <BackButton />
          <Text fontSize = '2em' marginLeft={'auto'} marginRight='auto'>
             My Account
         </Text>
       </Flex>
-      <Box w = '100%' h = '30%' pl = '5%' display = 'flex' alignItems = 'center' justifyContent = 'start'>
+      <Box w = '100%' bg = 'blue' h = '30%' pl = '5%'  display = 'flex' alignItems = 'center' justifyContent = 'start'>
       <EditableImage/>
+        <Text fontSize = '2em' textAlign = 'center'>
+            {UserData.name}
+        </Text>
       </Box>
       </Box>
      </StyledDiv>

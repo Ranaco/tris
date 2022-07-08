@@ -8,6 +8,7 @@ import image from '../../public/images/background.jpg'
 import { ButtonGroup, Button, Input, Textarea, Show, Hide, Box, Flex, Container, Text } from '@chakra-ui/react'
 import TrisLogo from '../../components/logo'
 import { useDropzone } from 'react-dropzone'
+import { uploadFile } from '../../lib/ipfs-storage'
 
 const InputField = ({ name, value, onChange, title, props, width, placeholder, minWidth, size, isBio, isReqiured = false }) => {
   return(
@@ -79,8 +80,10 @@ const SignUp = () => {
     })
   } 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    const cid = await uploadFile({file: data.profilePic})
+    console.log(cid)
     
   }
 

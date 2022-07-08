@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract TrisNFT is ERC721URIStorage{
     using Counters for Counters.Counter;
     
-    constructor() ERC721("TrisNFT", "TRI"){}   
+    constructor() ERC721("TrisNFT", "TRI"){}
     Counters.Counter private _tokenId;
     address contractAddress;
 
@@ -62,21 +62,23 @@ contract TrisMarketPlace is ReentrancyGuard{
       address nftContractAddress,
       uint256 tokenId,
       uint256 price
-    ) public payable ReentrancyGuard{
+    ) public payable nonReentrant{
         require(price > 0, "Price should be greater tha 0 wei");
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
         
         IERC721(nftContractAddress).transferFrom(msg.sender, address(this), tokenId);
 
-        _idToMarketItem[itemId] = (
+        TrisMarketItem memory marketItem = TrisMarketItem(
             itemId,
             tokenId,
             price,
-            address(0),
-            msg.sender, 
+            payable(address(0)),
+            payable(msg.sender), 
             nftContractAddress
         );
+
+        _idToMarketItem[itemId] = marketItem;
 
       emit MarketItemCreated(itemId, tokenId, price, address(this), msg.sender, nftContractAddress);
     }

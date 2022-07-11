@@ -1,7 +1,6 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AppState } from "../_app";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
 import image from "../../public/images/background.jpg";
@@ -14,14 +13,28 @@ import {
   Hide,
   Box,
   Flex,
-  Container,
   Text,
 } from "@chakra-ui/react";
 import TrisLogo from "../../components/logo";
 import { useDropzone } from "react-dropzone";
 import { uploadFile } from "../../lib/ipfs-storage";
+import * as React from 'react'
 
-const InputField = ({
+interface InputFieldInterface {
+  name: string,
+  value: any,
+  onChange: any,
+  title: string,
+  props: any,
+  width: string,
+  placeholder: string,
+  minWidth: string,
+  size?: string,
+  isBio?: boolean,
+  isReqiured?: boolean
+}
+
+const InputField: React.FC<InputFieldInterface> = ({
   name,
   value,
   onChange,
@@ -51,7 +64,7 @@ const InputField = ({
       {isBio ? (
         <Textarea
           required={isReqiured}
-          maxLength={"300"}
+          maxLength={300}
           fontSize="1.4em"
           name={name}
           style={{ ...props }}
@@ -125,7 +138,6 @@ const MastHead = () => {
 
 const SignUp = () => {
   const [file, setFile] = useState([]);
-  const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(
     () => () => {
@@ -143,7 +155,7 @@ const SignUp = () => {
     userName: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setData((val) => {
       return {
         ...val,
@@ -152,13 +164,13 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const cid = await uploadFile({ file: data.profilePic });
     console.log(cid);
   };
 
-  const { acceptedfile, getRootProps, getInputProps, isDragActive } =
+  const { getRootProps, getInputProps, isDragActive } =
     useDropzone({
       onDrop: (acceptedfile) => {
         const file = acceptedfile[0];
@@ -280,18 +292,20 @@ const SignUp = () => {
                 flexDirection="column"
                 justifyContent="center"
               >
-                <StyledDiv
-                  mt="15%"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  position={"relative"}
-                  w="20vh"
-                  h="20vh"
-                  style={{ cursor: "pointer", borderRadius: "100%" }}
+                <div
+                  style={{
+                    marginTop: "15%",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    width: "20vh",
+                    height: "20vh",
+                    cursor: "pointer", borderRadius: "100%"
+                  }}
                   {...getRootProps()}
                 >
-                  <Input style={{ cursor: "pointer" }} {...getInputProps()} />
+                  <input style={{ cursor: "pointer" }} {...getInputProps()} />
                   {file[0] == null ? (
                     !isDragActive ? (
                       <Image
@@ -319,7 +333,7 @@ const SignUp = () => {
                       style={{ borderRadius: "100%" }}
                     />
                   )}
-                </StyledDiv>
+                </div>
                 <ButtonGroup mt="auto" mb="15%">
                   <Button
                     type="submit"
@@ -343,7 +357,7 @@ const SignUp = () => {
   );
 };
 
-SignUp.getLayout = (page) => {
+SignUp.getLayout = (page: JSX.Element) => {
   return <Layout title={"Tris - Sign up"}>{page}</Layout>;
 };
 

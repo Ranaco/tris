@@ -104,6 +104,6 @@ const Homepage = () => {
       </Show>
     </Flex>
   );
-};
+}
 
 export default Homepage;

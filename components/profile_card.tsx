@@ -53,8 +53,8 @@ const FollowPanel = ({ following, followers, props }) => {
 
 interface ProfileCardInterface {
   following: string,
-  profileUrl: string,
-  wallUrl: string,
+  profileUrl: any,
+  wallUrl: any,
   followers: string,
   name: string,
   userName: string,

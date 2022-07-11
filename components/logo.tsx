@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { StyledDiv } from "../lib/custom-component";
-import { AppProps } from "next/app";
 
-const TrisLogo = (props: AppProps) => {
+const TrisLogo = (props: any) => {
   return (
     <StyledDiv h="200px" w="200px" {...props}>
       <Image

@@ -1,6 +1,4 @@
 import {
-  Box,
-  Container,
   Text,
   Flex,
   Show,
@@ -21,7 +19,7 @@ import MetaMaskLogo from "../../public/icons/metamask.png";
 import { useEffect, useState } from "react";
 import { AppState } from "../_app";
 
-let providerOptions;
+let providerOptions: any;
 
 if (typeof window !== "undefined") {
   if (!window?.ethereum?.isSequence) {
@@ -51,7 +49,7 @@ const Login = () => {
   const [provider, setProvider] = useState(undefined);
   const size = getWindowDimensions();
   const router = useRouter();
-  const [state, setState] = useContext(AppState);
+  const { state, setState } = useContext(AppState);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -75,7 +73,7 @@ const Login = () => {
   const connectWallet = async () => {
     console.log("Connecting wallet");
     const wallet = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(wallet);
+    const provider: any = new ethers.providers.Web3Provider(wallet);
     console.log("Wallet connection successful");
 
     if (wallet.sequence) {
@@ -144,7 +142,7 @@ const Login = () => {
               fontSize="4.4em"
               alignSelf="center"
             >
-              Welcome to{" "}
+              Welcome to &nbsp;
               <span style={{ fontFamily: "Megrim", fontWeight: "bold" }}>
                 Tris.
               </span>
@@ -181,7 +179,7 @@ const Login = () => {
         w="100%"
         css={{ backdropFilter: "blur(40px)" }}
       >
-        <Text fontSize="4em" wrap="wrap" w="100%">
+        <Text fontSize="4em" w="100%">
           Login with your <br />
           <span style={{ fontWeight: "bold", color: "lightgrey" }}>
             web3
@@ -219,7 +217,7 @@ const Login = () => {
   );
 };
 
-Login.getLayout = (page) => {
+Login.getLayout = (page: JSX.Element) => {
   return <Layout title="Tris - Login">{page}</Layout>;
 };
 

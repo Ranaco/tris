@@ -13,7 +13,7 @@ import {
   Rubik,
   PermanentMarker,
   Sacramento,
-} from "../components/fonts.js"
+} from "../components/fonts"
 import { AppProps } from "next/app";
 
 export interface IProviderProps {

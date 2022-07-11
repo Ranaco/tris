@@ -14,7 +14,7 @@ contract TrisNFT is ERC721URIStorage{
     Counters.Counter private _tokenId;
     address contractAddress = address(0);
 
-    function mintToken(string memory tokenUri, address ownerAddress) public returns(uint256 itemId){
+    function mintToken(string memory tokenUri) public returns(uint256 itemId){
         require(contractAddress == msg.sender, "Only the marketplace contract can call this function");
         _tokenId.increment();
         uint256 currentId = _tokenId.current();
@@ -39,10 +39,7 @@ contract TrisMarketPlace is ReentrancyGuard{
     Counters.Counter private _soldItems;
     address private trisNftAddress;
 
-    address payable owner;
-
-    constructor(address nftAddress){
-        owner = payable(msg.sender);
+    constructor(address nftAddress, address payable ownerAddress){
         trisNftAddress = nftAddress;
         TrisNFT(trisNftAddress).updateContractAddress(address(this));
     }
@@ -67,40 +64,41 @@ contract TrisMarketPlace is ReentrancyGuard{
     );
 
     function createMarketItem(
-      uint256 price
+      uint256 price,
+      address payable ownerAddress
     ) public payable nonReentrant{
         require(price > 0, "Price should be greater tha 0 wei");
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
         
 
-        uint256 tokenId = TrisNFT(trisNftAddress).mintToken("https://", msg.sender);
+        uint256 tokenId = TrisNFT(trisNftAddress).mintToken("https://");
         TrisMarketItem memory marketItem = TrisMarketItem(
             itemId,
             tokenId,
             price,
             payable(address(0)),
-            payable(msg.sender),
+            ownerAddress,
             trisNftAddress
         );
 
         _idToMarketItem[itemId] = marketItem;
 
-      emit MarketItemCreated(itemId, tokenId, price, address(this), msg.sender, trisNftAddress);
+      emit MarketItemCreated(itemId, tokenId, price, address(this), ownerAddress, trisNftAddress);
     }
 
     function getMarketItem(uint256 itemId) public view returns(TrisMarketItem memory item){
         return _idToMarketItem[itemId];
     }
     
-    function createMarketSales(address nftContractAddress, uint256 itemId) public payable{
+    function createMarketSales(address nftContractAddress, uint256 itemId, address payable newOwnerAddress ) public payable{
         uint256 price = _idToMarketItem[itemId].price;
         uint256 tokenId = _idToMarketItem[itemId].tokenId;
         require(msg.value >= price, "Price should be greater than or equal to the price of the item");
         require(_idToMarketItem[itemId].owner == address(0), "This item is already sold");
         _idToMarketItem[itemId].seller.transfer(msg.value);
-        IERC721(nftContractAddress).transferFrom(address(this), msg.sender, tokenId);
-        _idToMarketItem[itemId].owner = payable(msg.sender);
+        IERC721(nftContractAddress).transferFrom(address(this), newOwnerAddress, tokenId);
+        _idToMarketItem[itemId].owner = payable(newOwnerAddress);
         _soldItems.increment();
     }
 

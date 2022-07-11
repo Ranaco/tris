@@ -3,12 +3,14 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./3_TrisNFT.sol";
 
 contract UserContract{
     using Counters for Counters.Counter;
     Counters.Counter public userCount;
-    mapping(address => bool) public users;
+    mapping(address => bool) public userIsRegistered;
     mapping(address => User) private mapToUser;
+    User[] private usersList;
 
     struct User{
         string name;
@@ -30,11 +32,14 @@ contract UserContract{
         uint256 likes;
         uint256 commentsCount;
         string[] comments;
+        uint256 priceByOwner;
+        uint256 basePrice;
+        bool isNft;
         uint256 tokenId;
     }
 
     function createUser(string memory name, string memory userName, string memory avatarUrl, string memory bio, string memory wallUrl) public {
-        require(users[msg.sender] != true, "User already exists");
+        require(userIsRegistered[msg.sender] != true, "User already exists");
         User storage userData = mapToUser[msg.sender];
         userData.name = name;
         userData.userName = userName;
@@ -46,27 +51,36 @@ contract UserContract{
         userData.userAddress = payable(msg.sender);
         userData.friends = new address[](0);
         userCount.increment();
-        users[msg.sender] = true;
+        userIsRegistered[msg.sender] = true;
+        usersList.push(mapToUser[msg.sender]);
     }
 
-    function uploadPost(string memory post, uint256 tokenId) public {
+    function uploadPost(string memory post, uint256 tokenId, bool isNft, uint256 priceByOwner) public {
+        require(userIsRegistered[msg.sender] == true, "User not registered.");
         User storage currUser = mapToUser[msg.sender];
         currUser.postCount += 1;
         Post memory currPost = Post(
             {
                 post: post,
                 postId: currUser.postCount,
-                likes: 0,   
+                likes: 0,
+                isNft: isNft,
                 commentsCount: 0,
+                priceByOwner: isNft ? priceByOwner : 0,
                 comments: new string[](0),
-                tokenId: tokenId
+                tokenId: isNft ? tokenId : 0,
+                basePrice: isNft ? 10 : 0
             }
         );
         currUser.posts.push(currPost);
     }
 
+    function getUserList() public view returns(User[] memory){
+        return usersList;
+    }
+
     function getUserPosts() public view returns (Post[] memory userPosts){
-        require(users[msg.sender] == true, "User doesn't exist");
+        require(userIsRegistered[msg.sender] == true, "User not registered.");
         User storage currUser = mapToUser[msg.sender];
         uint userPostCount = currUser.postCount;
         Post[] memory currUserPosts = new Post[](userPostCount);
@@ -100,7 +114,7 @@ contract UserContract{
     }
 
     function getUserData() public view returns(User memory){
-        require(users[msg.sender] == true, "User doesn't exist");
+        require(userIsRegistered[msg.sender] == true, "User not registered.");
         return mapToUser[msg.sender];
     }
     

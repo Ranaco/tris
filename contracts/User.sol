@@ -29,8 +29,23 @@ contract TrisNFT is ERC721URIStorage{
         contractAddress = marketPlaceAddress;
     }
 
+    function returnCurrentUser() public view returns(address){
+        return msg.sender;
+    }
+
+    /*
+        A custom function to transfer ownership from on owner to another.
+    */
+    function transferNft(address currOwner, address newOwner, uint tokenId) public {
+        transferFrom(currOwner, newOwner, tokenId);
+    }
+
     function getLatestTokenId() public view returns(uint256 itemId){
         return _tokenId.current();
+    }
+
+    function returnOwner(uint id) public view returns(address){
+        return ownerOf(id);
     }
 }
 
@@ -79,6 +94,7 @@ contract UserContract is ReentrancyGuard{
         string post;
         bytes32 postId;
         uint256 likes;
+        string title;
         bool isForSale;
         bool postIsBought;
         uint256 commentsCount;
@@ -95,7 +111,7 @@ contract UserContract is ReentrancyGuard{
         Events 
      */
     event UserCreated (string name, string userName, string avatarUrl, address userAddress);
-    event PostUploaded(string post, bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
+    event PostUploaded(string title, string post, bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
     event PostSold(string post, address owner, address seller, uint256 price);
 
     function createUser(string memory name, string memory userName, string memory avatarUrl, string memory bio, string memory wallUrl) public {
@@ -116,7 +132,11 @@ contract UserContract is ReentrancyGuard{
         emit UserCreated(userData.name, userData.userName, userData.avatarUrl, userData.userAddress);
     }
 
-    function uploadPost(string memory post, bool isNft, uint256 priceByOwner, bool isForSale) public nonReentrant{
+    /*
+        Function to upload post. This requires the post parameters, 
+        and uploads the post as either nft or a regular post.
+    */
+    function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale) public nonReentrant{
         require(userIsRegistered[msg.sender] == true, "User not registered.");
         User storage currUser = mapToUser[msg.sender];
 
@@ -132,6 +152,7 @@ contract UserContract is ReentrancyGuard{
                 post: post,
                 postId: callKeccak256(post),
                 likes: 0,
+                title: title,
                 postIsBought: false,
                 isForSale: isNft ? isForSale : false,
                 isNft: isNft,
@@ -146,23 +167,37 @@ contract UserContract is ReentrancyGuard{
         );
 
         _postsOfUsers[msg.sender][callKeccak256(post)] = currPost;
-        emit PostUploaded(currPost.post, currPost.postId, currPost.tokenId, priceByOwner, 10, currPost.owner, currPost.seller);
+        emit PostUploaded(currPost.title, currPost.post, currPost.postId, currPost.tokenId, priceByOwner, 10, currPost.owner, currPost.seller);
     }
 
+
+    /*
+        Dedicated function to buy/sell nfts before selling the nft owner should make sure he has 
+        made the NFT avaialbe for sale and the post is NFT. 
+        Before call this function the transferNFT in TrisNFT contract should be called to transfer the ownership.
+        That function can't be called form this function because that checks for msg.sender to be equal to 
+        post owner but when called from here msg.sender is the address of this contract and not the owner.
+        - If the post is already sold then it will be checked in the frontend throught the postIsBought parameter
+          only if the postIsBought turns out to be true then the the method in the TrisNft will be called.
+    */
     function buyPost(address ownerAddress, bytes32 postId, address newOwnerAddress) public payable nonReentrant{
         Post storage currPost = _postsOfUsers[ownerAddress][postId];
         require(userIsRegistered[msg.sender] == true, "User not registered");
+        require(currPost.isNft == true, "Post is not an nft");
         require(msg.sender == newOwnerAddress, "Unmatched transaction, i.e., the payer should be the new owner");
         require(userIsRegistered[ownerAddress] == true, "User not registered");
         require(currPost.isForSale == true, "Post not for sale");
         uint256 price = msg.value;
         User storage newUser = mapToUser[newOwnerAddress];
         require(price >= currPost.basePrice, "Amount should be greater than base price of the post.");
-        IERC721(trisNftAddress).transferFrom(currPost.owner, newOwnerAddress, currPost.tokenId);
+        if(currPost.postIsBought == false){
+            IERC721(trisNftAddress).transferFrom(address(this), newOwnerAddress, currPost.tokenId);
+        }
         currPost.seller.transfer(msg.value);
         currPost.owner = (newOwnerAddress);
         currPost.seller = payable(newOwnerAddress);
         removePost(postId, ownerAddress);
+        currPost.postIsBought = true;
         _postsOfUsers[newOwnerAddress][postId] = currPost;
         delete _postsOfUsers[ownerAddress][postId];
         newUser.postCount.push(postId);
@@ -176,6 +211,8 @@ contract UserContract is ReentrancyGuard{
         require(userIsRegistered[msg.sender] == true, "User not registered");
         _postsOfUsers[msg.sender][id].isForSale = isForSale;
     }
+
+    
 
     function getUserPosts() public view returns (Post[] memory userPosts){
         require(userIsRegistered[msg.sender] == true, "User not registered.");

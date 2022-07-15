@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { AppState } from "../_app";
 import Image from "next/image";
 import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";

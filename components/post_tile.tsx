@@ -35,13 +35,11 @@ const CustomButton = ({ onClick, icon, buttonText }) => {
 
 interface PostTileInterface {
   post: any,
-  key: any
 }
 
-const PostTile: React.FC<PostTileInterface> = ({ post, key }) => {
+const PostTile: React.FC<PostTileInterface> = ({ post }) => {
   return (
     <StyledDiv
-      key={key}
       minH="200px"
       bg="textGrey"
       w="100%"

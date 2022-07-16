@@ -10,8 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract TrisNFT is ERC721URIStorage{
     using Counters for Counters.Counter;
-    
-    constructor() ERC721("TrisNFT", "TRI"){}   
+    constructor() ERC721("TrisNFT", "TRI"){}
     Counters.Counter private _tokenId;
     address contractAddress = address(this);
 
@@ -25,7 +24,9 @@ contract TrisNFT is ERC721URIStorage{
     }
 
     function updateContractAddress( address marketPlaceAddress) public  {
-        require(contractAddress == address(this) || contractAddress == msg.sender, "Address is already declared or only the  owner contract can change the address.");
+        require(
+            contractAddress == address(this) || contractAddress == msg.sender,
+         "Address is already declared or only the  owner contract can change the address.");
         contractAddress = marketPlaceAddress;
     }
 
@@ -65,10 +66,10 @@ contract UserContract is ReentrancyGuard{
         TrisNFT(nftAddress).updateContractAddress(address(this));
     }
 
-    
+
 
     /*
-        User struct for storing user data. 
+        User struct for storing user data.
         name, userName, userAddress are required as in the UI the rest can be 0 or empty.
      */
     struct User{
@@ -108,10 +109,11 @@ contract UserContract is ReentrancyGuard{
     }
 
     /*
-        Events 
+        Events
      */
     event UserCreated (string name, string userName, string avatarUrl, address userAddress);
-    event PostUploaded(string title, string post, bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
+    event PostUploaded(string title, string post,
+     bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
     event PostSold(string post, address owner, address seller, uint256 price);
 
     function createUser(string memory name, string memory userName, string memory avatarUrl, string memory bio, string memory wallUrl) public {
@@ -133,7 +135,7 @@ contract UserContract is ReentrancyGuard{
     }
 
     /*
-        Function to upload post. This requires the post parameters, 
+        Function to upload post. This requires the post parameters,
         and uploads the post as either nft or a regular post.
     */
     function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale) public nonReentrant{
@@ -172,10 +174,10 @@ contract UserContract is ReentrancyGuard{
 
 
     /*
-        Dedicated function to buy/sell nfts before selling the nft owner should make sure he has 
-        made the NFT avaialbe for sale and the post is NFT. 
+        Dedicated function to buy/sell nfts before selling the nft owner should make sure he has
+        made the NFT avaialbe for sale and the post is NFT.
         Before call this function the transferNFT in TrisNFT contract should be called to transfer the ownership.
-        That function can't be called form this function because that checks for msg.sender to be equal to 
+        That function can't be called form this function because that checks for msg.sender to be equal to
         post owner but when called from here msg.sender is the address of this contract and not the owner.
         - If the post is already sold then it will be checked in the frontend throught the postIsBought parameter
           only if the postIsBought turns out to be true then the the method in the TrisNft will be called.
@@ -211,8 +213,6 @@ contract UserContract is ReentrancyGuard{
         require(userIsRegistered[msg.sender] == true, "User not registered");
         _postsOfUsers[msg.sender][id].isForSale = isForSale;
     }
-
-    
 
     function getUserPosts() public view returns (Post[] memory userPosts){
         require(userIsRegistered[msg.sender] == true, "User not registered.");
@@ -260,10 +260,10 @@ contract UserContract is ReentrancyGuard{
     function getUserData() public view returns(User memory){
         require(userIsRegistered[msg.sender] == true, "User not registered.");
         return mapToUser[msg.sender];
-    } 
+}
 
     function callKeccak256(string memory post) public pure returns( bytes32 result){
       return keccak256(abi.encodePacked(post));
-   }  
+}
 
 }

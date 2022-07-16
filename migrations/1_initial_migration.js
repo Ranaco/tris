@@ -1,5 +1,6 @@
-const Migrations = artifacts.require("Migrations");
+const Tris = artifacts.require("TrisNFT");
+const User = artifacts.require("User");
 
 module.exports = function (deployer) {
-  deployer.deploy(Migrations);
+  deployer.deploy(Tris);
 };

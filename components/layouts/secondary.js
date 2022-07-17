@@ -8,7 +8,7 @@ const Secondary = ({ children, title }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title}</title>
       </Head>
-      <StyledDiv w="100%" h="100%">
+      <StyledDiv w = '100vw' maxW="100%" h = '100vh'>
         {children}
       </StyledDiv>
     </StyledDiv>

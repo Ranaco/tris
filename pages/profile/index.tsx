@@ -1,4 +1,4 @@
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
 import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
 import getWindowDimensions from "../../lib/device-viewport";
@@ -6,7 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import Image from "next/image";
 import { TbEdit } from "react-icons/tb";
 import { AppState } from "../_app";
-import { useEffect, useContext } from "react";
+import Bio from '../../components/bio'
 
 const UserData = {
   name: "Rosy",
@@ -38,99 +38,110 @@ const BackButton = () => {
 };
 
 const EditableImage = () => {
-  return (
-    <Box cursor="pointer">
-      <Box>
-        <Image
-          src="https://i.pravatar.cc/300?img=1"
-          style={{ borderRadius: "100px" }}
-          alt="profile"
-          height="100px"
-          width="100px"
-        />
-      </Box>
-      <TbEdit
-        style={{
-          position: "relative",
-          top: "-110px",
-          backgroundColor: "black",
-          borderRadius: "30px",
-          right: "-80px",
-          height: "30px",
-          width: "30px",
-          padding: "6px",
-        }}
-        onClick={() => window.localStorage.setItem("isAuthenticated", "false")}
-        size="20px"
-        color="white"
-      />
-    </Box>
-  );
-};
 
-const Profile = () => {
-  const { state, setState } = useContext(AppState);
+  const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
 
-  useEffect(() => {
-    const logState = () => {
-      console.log("This is the state from Profile :: ", state);
-    };
-    logState();
-  }, []);
-
-  const size = getWindowDimensions();
   return (
     <StyledDiv
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      w="100wh"
-      h="100vh"
-    >
+      maxH='100%'
+      h='30%'
+      display='flex'
+      alignItems={'center'}
+      justifyContent='center'
+      flexDirection={'column'}>
       <StyledDiv
-        w="95%"
-        h="95%"
-        css={{ backdropFilter: "blur(20px)" }}
-        borderRadius="20px"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        position="fixed"
-      >
-        <Box
-          w={size.width > "1051" ? "45%" : size.width < "744" ? "90%" : "60%"}
-          h="80%"
-          bg="textGrey"
-          borderRadius="20px"
-        >
-          <Flex alignItems="center" w="100%" justifyContent="start">
-            <BackButton />
-            <Text fontSize="2em" marginLeft={"auto"} marginRight="auto">
-              My Account
-            </Text>
-          </Flex>
-          <Box
-            w="100%"
-            bg="blue"
-            h="30%"
-            pl="5%"
-            display="flex"
-            alignItems="center"
-            justifyContent="start"
-          >
-            <EditableImage />
-            <Text fontSize="2em" textAlign="center">
-              {UserData.name}
-            </Text>
-          </Box>
+        position={'fixed'}
+        w={isLargerThan1200 ? "57%" : "95%"}
+        h='30%'
+        bg='textGrey'
+        mt='28px'
+        borderRadius={isLargerThan1200 ? "0px 0px 20px 20px" : "20px"} />
+      <Box position={'relative'} bottom='-65%'>
+        <Box>
+          <Image
+            src="https://i.pravatar.cc/300?img=1"
+            style={{ borderRadius: "100px" }}
+            alt="profile"
+            height="150px"
+            width="150px"
+          />
         </Box>
-      </StyledDiv>
+        <TbEdit
+          style={{
+            cursor: 'pointer',
+            position: "relative",
+            top: "-150px",
+            backgroundColor: "black",
+            borderRadius: "30px",
+            right: "-120px",
+            height: "30px",
+            width: "30px",
+            padding: "6px",
+          }}
+          onClick={() => window.localStorage.setItem("isAuthenticated", "false")}
+          size="20px"
+          color="white"
+        />
+      </Box>
     </StyledDiv>
   );
 };
 
-Profile.getLayout = (page: JSX.Element) => (
-  <Layout title={"Profile"}>{page}</Layout>
-);
+const Profile = () => {
 
-export default Profile;
+  const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
+
+  return (
+    <Box
+      h='100%'
+      w='100%'
+      display='flex'
+      alignSelf='center'
+      justifyContent='center'
+    >
+      <Flex
+        alignSelf={'center'}
+        w='95%'
+        bg='#213545'
+        h='90%'
+        borderRadius={'20px'}
+      >
+        {
+          isLargerThan1200 ?
+            <Box
+              flexBasis={'20%'}
+              bgImage="url('https://w0.peakpx.com/wallpaper/190/187/HD-wallpaper-whatsapp-cartoon-skull-dark-dead-punk.jpg')"
+              css={{ backdropFilter: "blur(10px)" }}
+              borderRadius={'20px 0px 0px 20px'}
+              opacity='0.4'
+              h='100%'
+            /> : undefined
+        }
+        <Box
+          flexBasis={isLargerThan1200 ? '60%' : '100%'}
+          h='100%'
+          bg='blue'
+          w={isLargerThan1200 ? '60%' : '100%'}>
+          <EditableImage />
+          <Bio bio={UserData.bio} />
+        </Box>
+        {
+          isLargerThan1200 ?
+            <Box
+              bg='blue'
+              flexBasis={'20%'}
+              bgImage="url('https://w0.peakpx.com/wallpaper/190/187/HD-wallpaper-whatsapp-cartoon-skull-dark-dead-punk.jpg')"
+              css={{ backdropFilter: "blur(10px)" }}
+              borderRadius={'0px 20px 20px 0px'}
+              opacity='0.4'
+              h='100%'
+            /> : undefined
+        }
+      </Flex>
+    </Box>
+  )
+}
+
+Profile.getLayout = (page: any) => <Layout title={"Profile"}>{page}</Layout>
+
+export default Profile

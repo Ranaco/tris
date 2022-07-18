@@ -1,5 +1,6 @@
 import {
   Box,
+  useMediaQuery,
   Container,
   Text,
 } from '@chakra-ui/react'
@@ -9,8 +10,19 @@ interface BioProps {
 }
 
 const Bio: React.FC<BioProps> = ({ bio }) => {
+  const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
+
   return (
-    <Box color='white' w='100%' h='200px' mt='20px' textAlign={'center'} bg='red'>
+    <Box
+      m='5px'
+      borderRadius={'20px'}
+      color='white'
+      p='25px'
+      mr={isLargerThan1200 ? 'auto' : undefined}
+      mt='20px'
+      textAlign={'center'}
+      border='4px dotted grey'
+    >
       {bio}
     </Box>
   )

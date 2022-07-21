@@ -23,7 +23,7 @@ export interface IProviderProps {
   children?: any;
 }
 
-type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any };
+type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any };
 
 type AppContextValue = {
   state: AppContextState;
@@ -53,7 +53,7 @@ if (typeof window !== "undefined") {
 
 let web3Modal;
 
-if(typeof window !== 'undefined'){
+if (typeof window !== 'undefined') {
   web3Modal = new Web3Modal({
     providerOptions,
     cacheProvider: true,
@@ -77,38 +77,45 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
   useEffect(() => {
     let user: any;
-    let isRegistered: boolean = false;
-    if (web3Modal.cachedProvider) {
-      connectWallet().then((web3) => {
-        loadContracts({ state, setState, web3 }).then((data) => {
-          const { Tris, User} = data;
-          setState((val) => {
-            return{
-              ...val,
-              TrisNft: Tris,
-              UserContract: User
-            }
-          })
-          user = User
-        });
-      });
-    }
+    let isRegistered: boolean;
+    const connect = async () => {
+      if (web3Modal.cachedProvider) {
+        await connectWallet().then((res) => {
+          const { web3, account } = res;
+          console.log("This is the main web3", web3);
+          loadContracts({ state, setState, web3 }).then((data) => {
+            const { Tris, User } = data;
+            setState((val) => {
+              return {
+                ...val,
+                TrisNft: Tris,
+                UserContract: User
+              }
+            })
+            getRegisteredUser({ UserContract: User, account: account }).then((isIt) => {
+              setState((val) => {
+                return {
+                  ...val,
+                  isRegistered: isIt
+                }
+              })
+              console.log("Is registered", isIt);
+            })
 
-     getRegisteredUser(user).then((isIt) => {
-      isRegistered = isIt
-     })
-    
-    if (window.localStorage.getItem("isAuthenticated") != "true") {
+          });
+        });
+      }
+    }
+    if (window.localStorage.getItem("isAuthenticated") !== "true") {
       router.replace("/login");
-    } else if (!isRegistered) {
-      router.replace("/signup");
-    } 
+    }
+    connect();
+
   }, [state.account]);
 
-  const getRegisteredUser = async (UserContract: any) => {
-    if(UserContract !== undefined){
-      const isRegistered = await UserContract.methods.userIsRegistered(state.account).call()
-    console.log("isRegistered :: ", isRegistered);
+  const getRegisteredUser = async ({ UserContract, account }) => {
+    if (UserContract !== undefined) {
+      const isRegistered = await UserContract.methods.userIsRegistered(account).call()
       return isRegistered
     }
   }
@@ -129,8 +136,8 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
       (provider as any).sequence = await wallet.sequence;
     }
     window.localStorage.setItem("isAuthenticated", "true");
-    await getAccounts(provider);
-    return web3;
+    const account = await getAccounts(provider);
+    return { web3, account };
   };
 
   const getAccounts = async (provider: any) => {
@@ -143,6 +150,7 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
           account: account,
         };
       });
+      return account
     } else {
       console.log("Provider not connected");
     }

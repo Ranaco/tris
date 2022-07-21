@@ -77,6 +77,7 @@ contract UserContract is ReentrancyGuard{
         string avatarUrl;
         string bio;
         string wallUrl;
+        string email;
         uint256 followersCount;
         uint256 followingCount;
         bytes32[] postCount;
@@ -115,7 +116,7 @@ contract UserContract is ReentrancyGuard{
     event PostUploaded(string title, string post, bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
     event PostSold(string post, address owner, address seller, uint256 price);
 
-    function createUser(string memory name, string memory userName, string memory avatarUrl, string memory bio, string memory wallUrl) public {
+    function createUser(string memory name, string memory userName, string memory avatarUrl, string memory email, string memory bio, string memory wallUrl) public {
         require(userIsRegistered[msg.sender] != true, "User already exists");
         User storage userData = mapToUser[msg.sender];
         userData.name = name;
@@ -124,6 +125,7 @@ contract UserContract is ReentrancyGuard{
         userData.bio = bio;
         userData.wallUrl = wallUrl;
         userData.userAddress = msg.sender;
+        userData.email = email;
         userCount.increment();
         userIsRegistered[msg.sender] = true;
         usersList.push(userData);
@@ -242,7 +244,7 @@ contract UserContract is ReentrancyGuard{
         postCount.pop();
     }
 
-    function likeAPost(address postOwner, bytes32 postId) public {
+    function likePost(address postOwner, bytes32 postId) public {
         require(userIsRegistered[msg.sender] == true, "User not registered");
         Post storage currPost = _postsOfUsers[postOwner][postId];
         currPost.likes += 1;

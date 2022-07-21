@@ -58,9 +58,6 @@ const Login = () => {
       }
     }
 
-    if (window.localStorage.getItem("isAuthenticated") == "true") {
-      router.replace("/");
-    }
   }, []);
 
   const connectWeb3Modal = async () => {
@@ -81,10 +78,13 @@ const Login = () => {
     }
     setProvider(provider);
     console.log("This is the provider:: ", provider);
-    const res = getAccounts(provider);
-    console.log("This is the state :: ", state);
-    window.localStorage.setItem("isAuthenticated", "true");
-    router.replace("/");
+    await getAccounts(provider).then((account) => {
+      console.log("This is the state :: ", state);
+      if (account !== undefined) {
+        router.replace("/signup");
+      }
+    });
+
   };
 
   const getAccounts = async (provider) => {
@@ -95,8 +95,6 @@ const Login = () => {
         return {
           ...val,
           account: account,
-          isAuthenticated:
-            provider != undefined && provider.provider.isMetaMask != false,
         };
       });
       return account;

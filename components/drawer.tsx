@@ -13,7 +13,7 @@ import {
 import Image from 'next/image'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { uploadFile } from '../lib/ipfs-storage'
+import { uploadFileWithState } from '../lib/ipfs-storage'
 import LoadingBar from './loading-bar'
 
 interface CustomDrawerProps {
@@ -70,7 +70,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
 
   const uploadToIpfs = (e: any) => {
     e.preventDefault()
-    uploadFile({ file: data.file[0], setProgress: setProgress })
+    uploadFileWithState({ file: data.file[0], setProgress: setProgress })
   }
 
   const changeBoolValue = (e: any) => {

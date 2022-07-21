@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
-import image from "../../public/images/background.jpg";
 import {
   ButtonGroup,
   Button,
@@ -18,6 +17,8 @@ import TrisLogo from "../../components/logo";
 import { useDropzone } from "react-dropzone";
 import { uploadFile } from "../../lib/ipfs-storage";
 import * as React from 'react'
+import { AppState } from '../_app'
+import { useRouter } from "next/router";
 
 interface InputFieldInterface {
   name: string,
@@ -136,8 +137,9 @@ const MastHead = () => {
 };
 
 const SignUp = () => {
+  const router = useRouter()
+  const { state, setState } = useContext(AppState);
   const [file, setFile] = useState([]);
-  const [isDisabled, setIsDisabled] = useState(true);
   useEffect(
     () => () => {
       file.forEach((file) => URL.revokeObjectURL(file.preview));
@@ -148,7 +150,6 @@ const SignUp = () => {
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
-    profilePic: undefined,
     email: "",
     bio: "",
     userName: "",
@@ -161,12 +162,43 @@ const SignUp = () => {
         [e.target.name]: e.target.value,
       };
     });
+    window.localStorage.setItem("isAuthenticated", "true");
+    router.replace('/')
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const cid = await uploadFile({ file: data.profilePic });
-    console.log(cid);
+    if (file[0] !== undefined) {
+      await uploadFile({ file: file[0] }).then((cid) => {
+        const userData = {
+          name: data.firstName + ' ' + data.lastName,
+          avatarUrl: cid,
+          email: data.email,
+          bio: data.bio,
+          userName: data.userName,
+          wallUrl: ''
+        }
+
+        state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
+          console.log(rec)
+          console.log("This is receipt return values, ", rec.events.UserCreated.returnValues)
+          console.log('This is receipt, ', rec)
+          console.log("THis is the cid :: ", cid)
+        })
+      });
+    } else {
+      const userData = {
+        name: data.firstName + ' ' + data.lastName,
+        avatarUrl: "",
+        email: data.email,
+        bio: data.bio,
+        userName: data.userName,
+        wallUrl: ''
+      }
+
+      state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account })
+
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive } =
@@ -298,8 +330,8 @@ const SignUp = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
-                    width: "20vh",
-                    height: "20vh",
+                    height: "200px",
+                    width: "300px",
                     cursor: "pointer", borderRadius: "100%"
                   }}
                   {...getRootProps()}
@@ -307,29 +339,37 @@ const SignUp = () => {
                   <input style={{ cursor: "pointer" }} {...getInputProps()} />
                   {file[0] == null ? (
                     !isDragActive ? (
-                      <Image
-                        src={image}
+                      <Box
+                        backgroundColor='blackAlpha.100'
                         height="100%"
                         width="100%"
-                        layout="fill"
-                        style={{ borderRadius: "100%" }}
-                      />
+                        style={{ borderRadius: "20px" }}
+                        display='flex'
+                        alignItems={'center'}
+                        justifyContent='center'
+                        border='3px dotted grey'
+                      >
+                        Upload Image
+                      </Box>
                     ) : (
-                      <Image
-                        src={file[0] == null ? image : file[0].preview}
+                      <Box
+                        backgroundColor='blackAlpha.100'
                         height="100%"
                         width="100%"
-                        layout="fill"
-                        style={{ borderRadius: "100%" }}
-                      />
+                        style={{ borderRadius: "20px" }}
+                        display='flex'
+                        alignItems={'center'}
+                        justifyContent='center'
+                        border='3px dotted grey'
+                      >
+                        Drop here
+                      </Box>
                     )
                   ) : (
                     <Image
                       src={file[0].preview}
-                      height="100%"
-                      width="100%"
                       layout="fill"
-                      style={{ borderRadius: "100%" }}
+                      style={{ borderRadius: "20px" }}
                     />
                   )}
                 </div>

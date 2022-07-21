@@ -1,8 +1,10 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout, { ScrollBarStyle } from "../components/layouts/main";
 import { ethers } from "ethers";
+import loadContracts from "../lib/load-contracts";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
+import Web3 from "web3";
 import { sequence } from "0xsequence";
 import React, { Dispatch, useState, useEffect, SetStateAction } from "react";
 import theme from "../lib/theme";
@@ -15,12 +17,13 @@ import {
   Sacramento,
 } from "../components/fonts"
 import { AppProps } from "next/app";
+import LoadingScreen from "../components/loading-screen";
 
 export interface IProviderProps {
   children?: any;
 }
 
-type AppContextState = { account: string; isAuthenticated: boolean };
+type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any };
 
 type AppContextValue = {
   state: AppContextState;
@@ -50,7 +53,7 @@ if (typeof window !== "undefined") {
 
 let web3Modal;
 
-if (typeof window !== "undefined") {
+if(typeof window !== 'undefined'){
   web3Modal = new Web3Modal({
     providerOptions,
     cacheProvider: true,
@@ -66,32 +69,73 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
   const router = useRouter();
   const [state, setState] = useState({
     account: "0x0",
-    isAuthenticated: false,
+    TrisNft: undefined,
+    provider: undefined,
+    UserContract: undefined,
+    web3: undefined
   });
 
   useEffect(() => {
+    let user: any;
+    let isRegistered: boolean = false;
     if (web3Modal.cachedProvider) {
-      connectWallet();
+      connectWallet().then((web3) => {
+        loadContracts({ state, setState, web3 }).then((data) => {
+          const { Tris, User} = data;
+          setState((val) => {
+            return{
+              ...val,
+              TrisNft: Tris,
+              UserContract: User
+            }
+          })
+          user = User
+        });
+      });
     }
+
+     getRegisteredUser(user).then((isIt) => {
+      isRegistered = isIt
+     })
+    
     if (window.localStorage.getItem("isAuthenticated") != "true") {
       router.replace("/login");
+    } else if (!isRegistered) {
+      router.replace("/signup");
+    } 
+  }, [state.account]);
+
+  const getRegisteredUser = async (UserContract: any) => {
+    if(UserContract !== undefined){
+      const isRegistered = await UserContract.methods.userIsRegistered(state.account).call()
+    console.log("isRegistered :: ", isRegistered);
+      return isRegistered
     }
-  }, []);
+  }
 
   const connectWallet = async () => {
     console.log("Connecting wallet");
     const wallet = await web3Modal.connect();
-    const provider: any = new ethers.providers.Web3Provider(wallet);
+    const provider = new ethers.providers.Web3Provider(wallet);
+    const web3 = new Web3(wallet);
+    setState((val) => {
+      return {
+        ...val,
+        web3: web3,
+        provider: provider,
+      }
+    });
     if (wallet.sequence) {
-      provider.sequence = wallet.sequence;
+      (provider as any).sequence = await wallet.sequence;
     }
     window.localStorage.setItem("isAuthenticated", "true");
-    getAccounts(provider);
+    await getAccounts(provider);
+    return web3;
   };
 
-  const getAccounts = async (provider) => {
+  const getAccounts = async (provider: any) => {
     if (provider != null) {
-      const signer = provider.getSigner();
+      const signer = await provider.getSigner();
       const account = await signer.getAddress();
       setState((val) => {
         return {
@@ -102,6 +146,7 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     } else {
       console.log("Provider not connected");
     }
+
   };
 
   const getLayout = Component.getLayout;
@@ -138,5 +183,9 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     </ChakraProvider>
   );
 };
+
+const getServerSideProps = async (ctx: any) => {
+
+}
 
 export default Website;

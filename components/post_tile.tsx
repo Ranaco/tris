@@ -1,13 +1,14 @@
-import { ButtonGroup, Button, Container, Box, Text } from "@chakra-ui/react";
-import { StyledDiv } from "../lib/custom-component";
+import { ButtonGroup, Button, Container, Box, Text, Input } from "@chakra-ui/react";
+import { StyledButton, StyledDiv, StyledInput } from "../lib/custom-component";
 import VerfiedBadge from "../public/images/verified.png";
 import Image from "next/image";
-import { BsThreeDots } from "react-icons/bs";
 import { RiHeart2Fill } from "react-icons/ri";
 import { FaRetweet } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import getWindowDimensions from "../lib/device-viewport";
 import * as React from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 
 const CustomButton = ({ onClick, icon, buttonText }) => {
   const windowDimension = getWindowDimensions();
@@ -35,9 +36,19 @@ const CustomButton = ({ onClick, icon, buttonText }) => {
 
 interface PostTileInterface {
   post: any,
+  postComment: any,
+  id: any,
+  likePost: any
 }
 
-const PostTile: React.FC<PostTileInterface> = ({ post }) => {
+const PostTile: React.FC<PostTileInterface> = ({ post, postComment, id, likePost }) => {
+
+  const [commentOn, setCommentOn] = useState(false)
+  const commentClicked = (e: any) => {
+    e.preventDefault()
+    setCommentOn(false)
+  }
+  const [comment, setComment] = useState('')
   return (
     <StyledDiv
       minH="200px"
@@ -98,9 +109,6 @@ const PostTile: React.FC<PostTileInterface> = ({ post }) => {
             </Text>
           </Box>
         </Box>
-        <Box alignSelf={"end"}>
-          <BsThreeDots size="20px" />
-        </Box>
       </Box>
       <Box>
         <Container>
@@ -145,7 +153,9 @@ const PostTile: React.FC<PostTileInterface> = ({ post }) => {
       </Box>
       <ButtonGroup w="100%" gap="30px" pl="11%" pr="11%" pt="4px" pb="30px">
         <CustomButton
-          onClick={() => { }}
+          onClick={() => {
+            likePost({ id: id })
+          }}
           icon={<RiHeart2Fill size="20px" />}
           buttonText="Like"
         />
@@ -155,12 +165,98 @@ const PostTile: React.FC<PostTileInterface> = ({ post }) => {
           buttonText="Retweet"
         />
         <CustomButton
-          onClick={() => { }}
+          onClick={() => {
+            setCommentOn((val) => !val)
+            setComment('')
+          }}
           icon={<FaRegCommentDots size="20px" />}
           buttonText="Comment"
         />
       </ButtonGroup>
-    </StyledDiv>
+      <AnimatePresence>
+        {
+          commentOn &&
+          (
+            <StyledDiv
+              gap='10px'
+              initial={{
+                opacity: 0,
+                height: '0px'
+              }}
+              animate={{
+                opacity: 1,
+                height: '50px'
+              }}
+              exit={{
+                opacity: 0,
+                height: '0px'
+              }}
+
+              w='100%' display={'flex'} alignItems='center' justifyContent='center'>
+              <StyledInput
+                initial={{
+                  opacity: 0,
+                  height: '0px'
+                }}
+                animate={{
+                  opacity: 1,
+                  height: '50px'
+                }}
+                exit={{
+                  opacity: 0,
+                  height: '0px'
+                }}
+                h='50px'
+                css={{
+
+                }}
+                pl='10px'
+                mb='30px'
+                bg='blackAlpha.200'
+                border={'none'}
+                placeholder='...'
+                w="67%"
+                borderRadius={'5px'}
+                alignSelf={'center'}
+                pt='10px'
+                fontSize={'1.3em'}
+                _placeholder={{
+                  fontSize: '30px',
+                }}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <StyledButton
+                textAlign={'center'}
+                onClick={() => {
+                  postComment({ id: id, comment: comment })
+                  console.log(id)
+                  console.log(comment)
+                }}
+                border={'none'}
+                mb='30px'
+                w='80px'
+                bg='blackAlpha.300'
+                initial={{
+                  opacity: 0,
+                  height: '0px'
+                }}
+                animate={{
+                  opacity: 1,
+                  height: '50px'
+                }}
+                exit={{
+                  opacity: 0,
+                  height: '0px'
+                }}
+
+              >
+                Post
+              </StyledButton>
+            </StyledDiv>
+          )
+        }
+      </AnimatePresence >
+    </StyledDiv >
   );
 };
 

@@ -2,6 +2,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { StyledDiv } from "../lib/custom-component";
 import Image from "next/image";
 import * as React from 'react'
+import { useRouter } from 'next/router'
 
 const FollowPanel = ({ following, followers, props }) => {
   return (
@@ -70,6 +71,9 @@ const ProfileCard: React.FC<ProfileCardInterface> = ({
   userName,
   bio,
 }) => {
+
+  const router = useRouter()
+
   return (
     <StyledDiv
       maxH="100%"
@@ -114,7 +118,7 @@ const ProfileCard: React.FC<ProfileCardInterface> = ({
         followers={followers}
         props={{ marginTop: "8%" }}
       />
-      <Text p="20px" color="blue" cursor="pointer" fontSize="1.3em">
+      <Text p="20px" color="blue" onClick={() => { router.push('/profile') }} cursor="pointer" fontSize="1.3em">
         My Profile
       </Text>
     </StyledDiv>

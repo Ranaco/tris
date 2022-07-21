@@ -45,7 +45,7 @@ const FollowerTile: React.FC<FollowerTileInterface> = ({ profileUrl, name, userN
       </Flex>
       <StyledDiv style={{ display: "flex" }} />
       <Button borderRadius={"100px"} color="black" bgColor="white">
-        Follow{" "}
+        Follow back
       </Button>
     </StyledDiv>
   );

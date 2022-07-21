@@ -8,7 +8,7 @@ import CreatePostTile from "../components/create_post_tile";
 import React, { useState, useContext, useEffect, useRef } from "react";
 import PostTile from "../components/post_tile";
 import DummyPostData from "../lib/dummy_post_data";
-import TrendForYou from "../components/trend_for_you";
+import TrendForYou from "../components/suggested";
 import TrendingData from "../lib/dummy_trending_data";
 import {
   Show,
@@ -20,11 +20,7 @@ import {
 } from "@chakra-ui/react";
 import CustomDrawer from '../components/drawer'
 
-interface HomePageProps {
-  props: any
-}
-
-const Homepage: React.FC<HomePageProps> = (props: any) => {
+const Homepage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const handleChange = (event: any) => {
     setData((val) => {
@@ -34,6 +30,15 @@ const Homepage: React.FC<HomePageProps> = (props: any) => {
       }
     })
   };
+  const postComment = ({ id, comment }) => {
+    console.log("The comment from id :: ", id, " is ", comment)
+  }
+
+  const likePost = ({ id }) => {
+    DummyPostData[id].likes += 1
+    console.log("Liked the following id :: ", id)
+  }
+
 
   //TODO: Have to remove the name and file and place post in place of them
   //after web3 storage is implemented.
@@ -145,8 +150,8 @@ const Homepage: React.FC<HomePageProps> = (props: any) => {
             alignItems="center"
             justifyContent="center"
           >
-            {DummyPostData.map((post) => {
-              return <PostTile post={post} />;
+            {DummyPostData.map((post, index) => {
+              return <PostTile likePost={likePost} post={post} id={index} postComment={postComment} />;
             })}
           </Box>
         </Square>
@@ -161,16 +166,8 @@ const Homepage: React.FC<HomePageProps> = (props: any) => {
     );
 }
 
-const getServerSideProps = async (context: any) => {
-  return {
-    props: {
-      name: 'hello there'
-    }
-  }
-}
-
-export {
-  getServerSideProps
+const getServerSideProps = async (ctx: any) => {
+  
 }
 
 export default Homepage;

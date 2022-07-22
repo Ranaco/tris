@@ -18,6 +18,7 @@ import {
   Box,
   useDisclosure,
 } from "@chakra-ui/react";
+
 import CustomDrawer from '../components/drawer'
 
 const Homepage = () => {
@@ -58,6 +59,8 @@ const Homepage = () => {
     const logState = () => {
       console.log("This is the state from homepage :: ", state);
     };
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    console.log("This is the isAuthenticated :: ", isAuthenticated);
     logState();
     loadPage()
   }, [state.account]);
@@ -167,7 +170,7 @@ const Homepage = () => {
 }
 
 const getServerSideProps = async (ctx: any) => {
-  
+
 }
 
 export default Homepage;

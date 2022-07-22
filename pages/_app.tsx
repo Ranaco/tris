@@ -17,13 +17,13 @@ import {
   Sacramento,
 } from "../components/fonts"
 import { AppProps } from "next/app";
-import LoadingScreen from "../components/loading-screen";
+import { CookiesProvider } from 'react-cookie'
 
 export interface IProviderProps {
   children?: any;
 }
 
-type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any };
+type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any, User: any };
 
 type AppContextValue = {
   state: AppContextState;
@@ -77,7 +77,6 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
   useEffect(() => {
     let user: any;
-    let isRegistered: boolean;
     const connect = async () => {
       if (web3Modal.cachedProvider) {
         await connectWallet().then((res) => {
@@ -93,31 +92,38 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
               }
             })
             getRegisteredUser({ UserContract: User, account: account }).then((isIt) => {
-              setState((val) => {
-                return {
-                  ...val,
-                  isRegistered: isIt
-                }
-              })
-              console.log("Is registered", isIt);
-            })
+              if (isIt) {
+                setState((val) => {
+                  return {
+                    ...val,
+                    isRegistered: isIt
+                  }
+                })
+                console.log("Is registered", isIt);
+                if (isIt) {
+                  window.localStorage.setItem("isAuthenticated", "true");
 
+                }
+              }
+            })
           });
         });
       }
     }
-    if (window.localStorage.getItem("isAuthenticated") !== "true") {
+    connect();
+    if (window.localStorage.getItem("isAuthenticated") != "true") {
       router.replace("/login");
     }
-    connect();
 
   }, [state.account]);
 
   const getRegisteredUser = async ({ UserContract, account }) => {
+    let isReg: boolean;
     if (UserContract !== undefined) {
-      const isRegistered = await UserContract.methods.userIsRegistered(account).call()
-      return isRegistered
+      isReg = await UserContract.methods.userIsRegistered(account).call()
+      console.log("Original registered", isReg);
     }
+    return isReg
   }
 
   const connectWallet = async () => {
@@ -135,7 +141,6 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     if (wallet.sequence) {
       (provider as any).sequence = await wallet.sequence;
     }
-    window.localStorage.setItem("isAuthenticated", "true");
     const account = await getAccounts(provider);
     return { web3, account };
   };
@@ -161,34 +166,38 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
   return getLayout ? (
     getLayout(
+      <CookiesProvider>
+        <ChakraProvider theme={theme}>
+          <MPLUS />
+          <ShadowsIntoLight />
+          <Rubik />
+          <Sacramento />
+          <Megrim />
+          <PermanentMarker />
+          <ScrollBarStyle />
+          <AppState.Provider value={{ state, setState }}>
+            <Component {...pageProps} key={router.route} />
+          </AppState.Provider>
+        </ChakraProvider>
+      </CookiesProvider>
+    )
+  ) : (
+    <CookiesProvider>
       <ChakraProvider theme={theme}>
         <MPLUS />
         <ShadowsIntoLight />
         <Rubik />
-        <Sacramento />
         <Megrim />
+        <Sacramento />
         <PermanentMarker />
         <ScrollBarStyle />
         <AppState.Provider value={{ state, setState }}>
-          <Component {...pageProps} key={router.route} />
+          <Layout router={router}>
+            <Component {...pageProps} key={router.route} />
+          </Layout>
         </AppState.Provider>
       </ChakraProvider>
-    )
-  ) : (
-    <ChakraProvider theme={theme}>
-      <MPLUS />
-      <ShadowsIntoLight />
-      <Rubik />
-      <Megrim />
-      <Sacramento />
-      <PermanentMarker />
-      <ScrollBarStyle />
-      <AppState.Provider value={{ state, setState }}>
-        <Layout router={router}>
-          <Component {...pageProps} key={router.route} />
-        </Layout>
-      </AppState.Provider>
-    </ChakraProvider>
+    </CookiesProvider>
   );
 };
 

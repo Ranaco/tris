@@ -162,8 +162,7 @@ const SignUp = () => {
         [e.target.name]: e.target.value,
       };
     });
-    window.localStorage.setItem("isAuthenticated", "true");
-    router.replace('/')
+
   };
 
   const handleSubmit = async (e: any) => {
@@ -179,11 +178,13 @@ const SignUp = () => {
           wallUrl: ''
         }
 
-        state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
+        state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.email, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).on('receipt', (rec) => {
           console.log(rec)
           console.log("This is receipt return values, ", rec.events.UserCreated.returnValues)
           console.log('This is receipt, ', rec)
           console.log("THis is the cid :: ", cid)
+          window.localStorage.setItem("isAuthenticated", "true");
+          router.replace('/')
         })
       });
     } else {
@@ -196,8 +197,11 @@ const SignUp = () => {
         wallUrl: ''
       }
 
-      state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account })
+      state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
+        window.localStorage.setItem("isAuthenticated", "true");
+        router.replace('/')
 
+      })
     }
   };
 

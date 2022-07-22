@@ -9,7 +9,7 @@ import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
 import getWindowDimensions from "../../lib/device-viewport";
 import TrisLogo from "../../components/logo";
-import Web3Modal from "web3modal";
+import Web3Modal, { local } from "web3modal";
 import { sequence } from "0xsequence";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -46,7 +46,6 @@ if (typeof window !== "undefined") {
 }
 
 const Login = () => {
-  const [provider, setProvider] = useState(undefined);
   const size = getWindowDimensions();
   const router = useRouter();
   const { state, setState } = useContext(AppState);
@@ -57,7 +56,9 @@ const Login = () => {
         connectWallet();
       }
     }
-
+    if (window.localStorage.getItem("isAuthenticated") == "true") {
+      router.push("/");
+    }
   }, []);
 
   const connectWeb3Modal = async () => {
@@ -68,6 +69,7 @@ const Login = () => {
   };
 
   const connectWallet = async () => {
+    let prov
     console.log("Connecting wallet");
     const wallet = await web3Modal.connect();
     const provider: any = new ethers.providers.Web3Provider(wallet);
@@ -76,15 +78,22 @@ const Login = () => {
     if (wallet.sequence) {
       provider.sequence = wallet.sequence;
     }
-    setProvider(provider);
-    console.log("This is the provider:: ", provider);
-    await getAccounts(provider).then((account) => {
-      console.log("This is the state :: ", state);
-      if (account !== undefined) {
+    setState((val) => {
+      return{
+        ...val,
+        provider: provider,
+      }
+    })
+    prov = provider 
+    console.log("This is the provider:: ", prov);
+    await getAccounts(prov).then((account) => {
+      console.log("This is the localStorage value :: ", window.localStorage.getItem("isAuthenticated"));
+      if (account !== undefined && state.isRegistered === false) {
         router.replace("/signup");
+      } else if (account !== undefined && window.localStorage.getItem("isAuthenticated") == "true") {
+        router.replace("/");
       }
     });
-
   };
 
   const getAccounts = async (provider) => {

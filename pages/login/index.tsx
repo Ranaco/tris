@@ -56,10 +56,19 @@ const Login = () => {
         connectWallet();
       }
     }
+    console.log("This is the state", state);
     if (window.localStorage.getItem("isAuthenticated") == "true") {
       router.push("/");
     }
   }, []);
+
+  const handleRouter = async () => {
+    const currUser = await state.UserContract.methods.getUserData().send({
+      from: state.account,
+    }).then((res) => {
+
+    })
+  }
 
   const connectWeb3Modal = async () => {
     if (web3Modal.cachedProvider) {
@@ -79,12 +88,12 @@ const Login = () => {
       provider.sequence = wallet.sequence;
     }
     setState((val) => {
-      return{
+      return {
         ...val,
         provider: provider,
       }
     })
-    prov = provider 
+    prov = provider
     console.log("This is the provider:: ", prov);
     await getAccounts(prov).then((account) => {
       console.log("This is the localStorage value :: ", window.localStorage.getItem("isAuthenticated"));

@@ -12,6 +12,7 @@ import {
   Box,
   Flex,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import TrisLogo from "../../components/logo";
 import { useDropzone } from "react-dropzone";
@@ -29,6 +30,7 @@ interface InputFieldInterface {
   width: string,
   placeholder: string,
   minWidth: string,
+  disabled: boolean,
   size?: string,
   isBio?: boolean,
   isReqiured?: boolean
@@ -41,6 +43,7 @@ const InputField: React.FC<InputFieldInterface> = ({
   title,
   props,
   width,
+  disabled,
   placeholder,
   minWidth,
   size,
@@ -58,11 +61,12 @@ const InputField: React.FC<InputFieldInterface> = ({
       flexDirection="column"
       css={{ backdropFilter: "blur(20px)" }}
     >
-      <Text fontSize="1.1em" color="white" pl="10px">
+      <Text fontSize="1.1em" color="lightgrey" pl="10px">
         {title}
       </Text>
       {isBio ? (
         <Textarea
+          disabled={disabled}
           required={isReqiured}
           maxLength={300}
           fontSize="1.4em"
@@ -79,6 +83,7 @@ const InputField: React.FC<InputFieldInterface> = ({
         />
       ) : (
         <Input
+          disabled={disabled}
           required={isReqiured}
           fontSize="1.4em"
           name={name}
@@ -138,6 +143,7 @@ const MastHead = () => {
 
 const SignUp = () => {
   const router = useRouter()
+  const [disabled, setDisabled] = useState(false)
   const { state, setState } = useContext(AppState);
   const [file, setFile] = useState([]);
   useEffect(
@@ -167,6 +173,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setDisabled(true)
     if (file[0] !== undefined) {
       await uploadFile({ file: file[0] }).then((cid) => {
         const userData = {
@@ -177,15 +184,21 @@ const SignUp = () => {
           userName: data.userName,
           wallUrl: ''
         }
-
-        state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.email, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).on('receipt', (rec) => {
-          console.log(rec)
-          console.log("This is receipt return values, ", rec.events.UserCreated.returnValues)
-          console.log('This is receipt, ', rec)
-          console.log("THis is the cid :: ", cid)
-          window.localStorage.setItem("isAuthenticated", "true");
-          router.replace('/')
-        })
+        state.UserContract.methods.createUser(
+          state.account,
+          userData.name,
+          userData.userName,
+          userData.avatarUrl,
+          userData.email,
+          userData.bio,
+          userData.wallUrl).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec) => {
+            console.log(rec)
+            console.log("This is receipt return values, ", rec.events.UserCreated.returnValues)
+            console.log('This is receipt, ', rec)
+            console.log("This is the cid :: ", cid)
+            window.localStorage.setItem("isAuthenticated", "true");
+            router.replace('/')
+          })
       });
     } else {
       const userData = {
@@ -197,7 +210,7 @@ const SignUp = () => {
         wallUrl: ''
       }
 
-      state.UserContract.methods.createUser(userData.name, userData.avatarUrl, userData.bio, userData.userName, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
+      state.UserContract.methods.createUser(state.account, userData.name, userData.userName, userData.avatarUrl, userData.email, userData.bio, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
         window.localStorage.setItem("isAuthenticated", "true");
         router.replace('/')
 
@@ -259,6 +272,7 @@ const SignUp = () => {
           >
             <Flex w="100%" justifyContent="space-evenly">
               <InputField
+                disabled={disabled}
                 isReqiured={true}
                 title="First name"
                 name="firstName"
@@ -270,6 +284,7 @@ const SignUp = () => {
                 minWidth="300px"
               />
               <InputField
+                disabled={disabled}
                 isReqiured={true}
                 title="Last name"
                 name="lastName"
@@ -283,6 +298,7 @@ const SignUp = () => {
             </Flex>
             <Flex w="100%" justifyContent="space-evenly">
               <InputField
+                disabled={disabled}
                 isReqiured={true}
                 title="Username"
                 name="userName"
@@ -295,6 +311,7 @@ const SignUp = () => {
               />
               <InputField
                 title="Email"
+                disabled={disabled}
                 name="email"
                 value={data.email}
                 onChange={handleChange}
@@ -305,6 +322,7 @@ const SignUp = () => {
               />
             </Flex>
             <InputField
+              disabled={disabled}
               title="Bio"
               name="bio"
               value={data.bio}
@@ -340,7 +358,7 @@ const SignUp = () => {
                   }}
                   {...getRootProps()}
                 >
-                  <input style={{ cursor: "pointer" }} {...getInputProps()} />
+                  <input disabled={disabled} style={{ cursor: "pointer" }} {...getInputProps()} />
                   {file[0] == null ? (
                     !isDragActive ? (
                       <Box
@@ -379,6 +397,7 @@ const SignUp = () => {
                 </div>
                 <ButtonGroup mt="auto" mb="15%">
                   <Button
+                    disabled={disabled}
                     type="submit"
                     borderRadius="30px"
                     variant="filled"
@@ -388,7 +407,17 @@ const SignUp = () => {
                     h="50px"
                     w="150px"
                   >
-                    Continue
+                    {
+                      disabled ? (
+                        <Spinner
+                          color="primary"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                        />
+                      ) : (
+                        <span>Submit</span>
+                      )
+                    }
                   </Button>
                 </ButtonGroup>
               </StyledDiv>

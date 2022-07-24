@@ -116,18 +116,18 @@ contract UserContract is ReentrancyGuard{
     event PostUploaded(string title, string post, bytes32 postId, uint256 tokenId, uint256 priceByOwner, uint256 basePrice, address owner, address seller);
     event PostSold(string post, address owner, address seller, uint256 price);
 
-    function createUser(string memory name, string memory userName, string memory avatarUrl, string memory email, string memory bio, string memory wallUrl) public {
-        require(userIsRegistered[msg.sender] != true, "User already exists");
-        User storage userData = mapToUser[msg.sender];
+    function createUser(address account, string memory name, string memory userName, string memory avatarUrl, string memory email, string memory bio, string memory wallUrl) public {
+        require(userIsRegistered[account] != true, "User already exists");
+        User storage userData = mapToUser[account];
         userData.name = name;
         userData.userName = userName;
         userData.avatarUrl = avatarUrl;
         userData.bio = bio;
         userData.wallUrl = wallUrl;
-        userData.userAddress = msg.sender;
+        userData.userAddress = account;
         userData.email = email;
         userCount.increment();
-        userIsRegistered[msg.sender] = true;
+        userIsRegistered[account] = true;
         usersList.push(userData);
         emit UserCreated(userData.name, userData.userName, userData.avatarUrl, userData.userAddress);
     }
@@ -207,9 +207,9 @@ contract UserContract is ReentrancyGuard{
         return usersList;
     }
 
-    function updatePostForSale(bytes32 id, bool isForSale) public {
-        require(userIsRegistered[msg.sender] == true, "User not registered");
-        _postsOfUsers[msg.sender][id].isForSale = isForSale;
+    function updatePostForSale(bytes32 id, bool isForSale, address account) public {
+        require(userIsRegistered[account] == true, "User not registered");
+        _postsOfUsers[account][id].isForSale = isForSale;
     }
 
     
@@ -257,9 +257,9 @@ contract UserContract is ReentrancyGuard{
         currPost.comments.push(comment);
     }
 
-    function getUserData() public view returns(User memory){
-        require(userIsRegistered[msg.sender] == true, "User not registered.");
-        return mapToUser[msg.sender];
+    function getUserData(address account) public view returns(User memory){
+        require(userIsRegistered[account] == true, "User not registered.");
+        return mapToUser[account];
     } 
 
     function callKeccak256(string memory post) public pure returns( bytes32 result){

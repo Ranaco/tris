@@ -72,11 +72,12 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     TrisNft: undefined,
     provider: undefined,
     UserContract: undefined,
-    web3: undefined
+    web3: undefined,
+    isRegistered: false,
+    User: undefined,
   });
 
   useEffect(() => {
-    let user: any;
     const connect = async () => {
       if (web3Modal.cachedProvider) {
         await connectWallet().then((res) => {
@@ -102,7 +103,8 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
                 console.log("Is registered", isIt);
                 if (isIt) {
                   window.localStorage.setItem("isAuthenticated", "true");
-
+                } else {
+                  window.localStorage.setItem("isAuthenticated", "false");
                 }
               }
             })
@@ -118,12 +120,23 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
   }, [state.account]);
 
   const getRegisteredUser = async ({ UserContract, account }) => {
-    let isReg: boolean;
+    let isIt: boolean
+    let currUser: any;
     if (UserContract !== undefined) {
-      isReg = await UserContract.methods.userIsRegistered(account).call()
-      console.log("Original registered", isReg);
+      isIt = await UserContract.methods.userIsRegistered(account).call()
+      if (isIt) {
+        currUser = await UserContract.methods.getUserData().call()
+        console.log("Current user :: ", currUser);
+        setState((val) => {
+          return {
+            ...val,
+            User: currUser
+          }
+        })
+      }
+      console.log("Original registered", isIt);
     }
-    return isReg
+    return isIt
   }
 
   const connectWallet = async () => {

@@ -35,9 +35,11 @@ const Homepage = () => {
     console.log("The comment from id :: ", id, " is ", comment)
   }
 
-  const likePost = ({ id }) => {
-    DummyPostData[id].likes += 1
-    console.log("Liked the following id :: ", id)
+  const likePost = async ({ id }) => {
+
+    console.log("This is the user data :: ", await state.UserContract.methods.getUserData().call())
+    //DummyPostData[id].likes += 1
+    //console.log("Liked the following id :: ", id)
   }
 
 
@@ -63,7 +65,7 @@ const Homepage = () => {
     console.log("This is the isAuthenticated :: ", isAuthenticated);
     logState();
     loadPage()
-  }, [state.account]);
+  }, [state]);
 
   const loadPage = () => {
     if (state.account !== "0x0") {

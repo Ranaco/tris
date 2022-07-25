@@ -3,7 +3,7 @@ const User = artifacts.require("UserContract");
 
 module.exports = async function (deployer) {
   deployer.deploy(Tris).then(function(){
-  return deployer.deploy(User, Tris.address,"0x9E7BD21f0b8e1Cc9E4bFc0C8C5d603Fd979760B6")
+  return deployer.deploy(User, Tris.address,"0xA9605c1819BF88140b0B8C6DBaC52A71746E3dB2")
   });
   
 }

@@ -1,5 +1,4 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const fs = require('fs');
 require('dotenv').config();
 const mnemonic = process.env.MNEMONIC;
 const matic_key= process.env.MATIC_KEY;
@@ -12,12 +11,11 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
     },
     matic: {
-      provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.g.alchemy.com/v2/${matic_key}`),
+      provider: () => new HDWalletProvider(mnemonic, `http://polygon-mumbai.g.alchemy.com/v2/${matic_key}`),
       network_id: 80001,
       confirmations: 2,
-      gasPrice: "60000000",
-      timeoutBlocks: 200,
-      skipDryRun: true
+      timeoutBlocks: 300,
+      skipDryRun: false,
     },
   },
 

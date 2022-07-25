@@ -125,7 +125,7 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     if (UserContract !== undefined) {
       isIt = await UserContract.methods.userIsRegistered(account).call()
       if (isIt) {
-        currUser = await UserContract.methods.getUserData().call()
+        currUser = await UserContract.methods.getUserData(account).call()
         console.log("Current user :: ", currUser);
         setState((val) => {
           return {

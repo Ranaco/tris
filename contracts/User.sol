@@ -136,9 +136,9 @@ contract UserContract is ReentrancyGuard{
         Function to upload post. This requires the post parameters, 
         and uploads the post as either nft or a regular post.
     */
-    function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale) public nonReentrant{
-        require(userIsRegistered[msg.sender] == true, "User not registered.");
-        User storage currUser = mapToUser[msg.sender];
+    function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale, address account) public nonReentrant{
+        require(userIsRegistered[account] == true, "User not registered.");
+        User storage currUser = mapToUser[account];
 
         uint256 tokenId;
 
@@ -162,11 +162,11 @@ contract UserContract is ReentrancyGuard{
                 tokenId: isNft ? tokenId : 0,
                 basePrice: isNft ? 10 : 0,
                 owner: isNft ? (address(this)) : (address(0)),
-                seller: isNft ? payable(msg.sender) : payable(address(0))
+                seller: isNft ? payable(account) : payable(address(0))
             }
         );
 
-        _postsOfUsers[msg.sender][callKeccak256(post)] = currPost;
+        _postsOfUsers[account][callKeccak256(post)] = currPost;
         emit PostUploaded(currPost.title, currPost.post, currPost.postId, currPost.tokenId, priceByOwner, 10, currPost.owner, currPost.seller);
     }
 
@@ -182,9 +182,8 @@ contract UserContract is ReentrancyGuard{
     */
     function buyPost(address ownerAddress, bytes32 postId, address newOwnerAddress) public payable nonReentrant{
         Post storage currPost = _postsOfUsers[ownerAddress][postId];
-        require(userIsRegistered[msg.sender] == true, "User not registered");
+        require(userIsRegistered[newOwnerAddress] == true, "User not registered");
         require(currPost.isNft == true, "Post is not an nft");
-        require(msg.sender == newOwnerAddress, "Unmatched transaction, i.e., the payer should be the new owner");
         require(userIsRegistered[ownerAddress] == true, "User not registered");
         require(currPost.isForSale == true, "Post not for sale");
         uint256 price = msg.value;
@@ -214,14 +213,14 @@ contract UserContract is ReentrancyGuard{
 
     
 
-    function getUserPosts() public view returns (Post[] memory userPosts){
-        require(userIsRegistered[msg.sender] == true, "User not registered.");
-        User storage currUser = mapToUser[msg.sender];
+    function getUserPosts(address sender) public view returns (Post[] memory userPosts){
+        require(userIsRegistered[sender] == true, "User not registered.");
+        User storage currUser = mapToUser[sender];
         uint userPostCount = currUser.postCount.length;
         Post[] memory currUserPosts = new Post[](userPostCount);
         uint currentIndex = 0;
         for(uint i = 0; i < userPostCount; i++){
-           Post storage currPost = _postsOfUsers[msg.sender][currUser.postCount[currentIndex]];
+           Post storage currPost = _postsOfUsers[sender][currUser.postCount[currentIndex]];
            currUserPosts[currentIndex] = currPost;
            currentIndex += 1;
         }
@@ -244,14 +243,14 @@ contract UserContract is ReentrancyGuard{
         postCount.pop();
     }
 
-    function likePost(address postOwner, bytes32 postId) public {
-        require(userIsRegistered[msg.sender] == true, "User not registered");
+    function likePost(address postOwner, bytes32 postId, address userAddress) public {
+        require(userIsRegistered[userAddress] == true, "User not registered");
         Post storage currPost = _postsOfUsers[postOwner][postId];
         currPost.likes += 1;
     }
 
-    function postComment( address postOwner, string memory comment, bytes32 postId ) public {
-        require(userIsRegistered[msg.sender] == true, "User not registered");
+    function postComment( address postOwner, string memory comment, bytes32 postId, address sender ) public {
+        require(userIsRegistered[sender] == true, "User not registered");
         Post storage currPost = _postsOfUsers[postOwner][postId];
         currPost.commentsCount += 1;
         currPost.comments.push(comment);

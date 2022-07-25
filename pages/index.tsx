@@ -37,7 +37,7 @@ const Homepage = () => {
 
   const likePost = async ({ id }) => {
 
-    console.log("This is the user data :: ", await state.UserContract.methods.getUserData().call())
+    console.log("This is the user data :: ", await state.UserContract.methods.getUserData(state.account).call())
     //DummyPostData[id].likes += 1
     //console.log("Liked the following id :: ", id)
   }
@@ -116,11 +116,11 @@ const Homepage = () => {
               <ProfileCard
                 profileUrl={ProfileImage}
                 wallUrl={WallUrl}
-                name="Vishal_kr7"
-                userName="vishal_002"
+                name={state.User.name}
+                userName={state.User.userName}
                 following="200"
                 followers="5000"
-                bio={state.account}
+                bio={state.User.bio}
               />
               <FollowingListTile followers={dummy_data} />
             </Box>

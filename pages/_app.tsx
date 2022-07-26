@@ -18,6 +18,7 @@ import {
 } from "../components/fonts"
 import { AppProps } from "next/app";
 import { CookiesProvider } from 'react-cookie'
+import { parseUserData } from '../lib/ipfs-storage'
 
 export interface IProviderProps {
   children?: any;
@@ -126,11 +127,12 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
       isIt = await UserContract.methods.userIsRegistered(account).call()
       if (isIt) {
         currUser = await UserContract.methods.getUserData(account).call()
-        console.log("Current user :: ", currUser);
+        const user = await parseUserData({ User: currUser })
+        console.log("Current user :: ", user);
         setState((val) => {
           return {
             ...val,
-            User: currUser
+            User: user
           }
         })
       }

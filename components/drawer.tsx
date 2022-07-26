@@ -46,12 +46,6 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
             });
           })
         );
-        setData((val: any) => {
-          return {
-            ...val,
-            file: [file],
-          };
-        });
         setProgress('File selected.')
         console.log(file.size.toString());
         console.log(file.name);
@@ -65,18 +59,10 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         [e.target.name]: e.target.value
       }
     })
-    console.log(data)
-  }
-
-  const uploadToIpfs = (e: any) => {
-    e.preventDefault()
-    uploadFileWithState({ file: data.file[0], setProgress: setProgress })
   }
 
   const changeBoolValue = (e: any) => {
     e.preventDefault()
-    console.log(data)
-    console.log(e.target.checked)
     setData((val: any) => {
       return {
         ...val,
@@ -95,6 +81,21 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
       isNft: true,
     })
     setFile([])
+  }
+
+  const submitForm = async (e: any) => {
+    e.preventDefault()
+    uploadFileWithState({ file: file[0], setProgress: setProgress }).then((url) => {
+      console.log("This is the URL from direct upload :: ", url)
+      setData((val) => {
+        return {
+          ...val,
+          file: url
+        }
+      })
+      onFormSubmit()
+    })
+
   }
 
   const removePost = () => {
@@ -122,7 +123,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         <DrawerHeader textAlign={'center'}>
           Create your TrisNFT
         </DrawerHeader>
-        <form onSubmit={onFormSubmit}>
+        <form onSubmit={submitForm}>
           <DrawerBody>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'start', flexDirection: 'column', gap: '30px' }}>
               <div

@@ -3,6 +3,10 @@ import * as React from "react";
 import { Global } from "@emotion/react";
 import Head from "next/head";
 import NavBar from "../navbar";
+import { AppState } from '../../pages/_app'
+import { useContext, useEffect, useState } from 'react'
+import { loadStaticPaths } from "next/dist/server/dev/static-paths-worker";
+import { Box } from "@chakra-ui/react";
 
 export const ScrollBarStyle = () => {
   return (
@@ -30,6 +34,7 @@ interface Main {
 }
 //<title> Tris - {router.asPath == '/marketplace' ? 'Marketplace' : 'Home'} </title>
 const Main: React.FC<Main> = ({ children, router }) => {
+
   return (
     <StyledDiv as="main">
       <Head>

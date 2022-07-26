@@ -47,7 +47,7 @@ const Homepage = () => {
   //after web3 storage is implemented.
   const [data, setData] = useState({
     title: "",
-    file: [],
+    file: undefined,
     description: "",
     priceByOwner: "",
     isForSale: true,
@@ -58,14 +58,8 @@ const Homepage = () => {
   const btnRef = useRef()
 
   useEffect(() => {
-    const logState = () => {
-      console.log("This is the state from homepage :: ", state);
-    };
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    console.log("This is the isAuthenticated :: ", isAuthenticated);
-    logState();
     loadPage()
-  }, [state]);
+  }, [state.User]);
 
   const loadPage = () => {
     if (state.account !== "0x0") {
@@ -73,8 +67,7 @@ const Homepage = () => {
     }
   }
 
-  const onFormSubmit = (e: any) => {
-    e.preventDefault()
+  const onFormSubmit = () => {
     console.log(data)
   }
 
@@ -114,7 +107,7 @@ const Homepage = () => {
               flexDirection="column"
             >
               <ProfileCard
-                profileUrl={ProfileImage}
+                profileUrl={state.User.profileUrl}
                 wallUrl={WallUrl}
                 name={state.User.name}
                 userName={state.User.userName}
@@ -145,7 +138,7 @@ const Homepage = () => {
             onScheduleClick={() => console.log("hello Schedule there")}
             onChange={handleChange}
             value={data.title}
-            profileUrl={ProfileImage}
+            profileUrl={state.User.profileUrl}
           />
           <Box
             flexDirection="column"

@@ -86,16 +86,9 @@ const ProfileCard: React.FC<ProfileCardInterface> = ({
       alignItems="center"
       justifyContent="start"
     >
-      <Box w="100%" h="5%">
-        <Image
-          layout="responsive"
-          height={"200%"}
-          src={wallUrl}
-          alt="wall_url"
-        />
-      </Box>
+      <Box w="22.5%" h="13%" bg='blackAlpha.400' borderRadius={'10px 10px 0px 0px '} position={'fixed'} />
       <Box borderRadius="100px" h="25%" w="25%" zIndex={"1"} paddingTop="18%">
-        <Image layout="responsive" src={profileUrl} alt="profile_url" />
+        <Image height='100px' width='100px' style={{ borderRadius: '100px' }} src={profileUrl} alt="profile_url" />
       </Box>
       <Text fontSize="1em" paddingTop="20%" fontWeight="bold">
         {name}

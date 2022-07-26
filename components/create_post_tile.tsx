@@ -74,7 +74,7 @@ const CreatePostTile: React.FC<CreatePostTileInterface> = ({
         justifyContent="center"
       >
         <Box h="8%" w="8%" alignSelf="start">
-          <Image src={profileUrl} alt="profile image" />
+          <Image height='100%' width='100%' style={{ borderRadius: '100%' }} src={profileUrl} alt="profile image" />
         </Box>
         <Box display={'flex'} gap='20px' p="0px" m="0px" w="100%" h="100%" pl="10px">
           <Input

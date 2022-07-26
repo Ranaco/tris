@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com", "i.pravatar.cc", "xsgames.co"],
+    domains: ["images.unsplash.com", "i.pravatar.cc", "xsgames.co", "ipfs.io"],
   },
   experimental: {
     images: {
@@ -12,8 +12,8 @@ module.exports = {
   },
   env: {
     NFT_API_KEY:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDU1NTA5MEM4OTU5NTI1ODhiZWIyYkZkZDUxNzU2OEQ4OTY5OTFjNDMiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTcyMDQyMTI1MDIsIm5hbWUiOiJUcmlzIn0.JEOMMyX0mOODXXT6rPYZZrI9TDmlNF-m0UFTTx93GpI",
-      USER_CONTRACT:"0xA48Ce9ED7F1719056cb053ee62D573733E22E6eB",
-      TRIS_NFT:"0x67d45A23599fE56DdaB82146Cc7b1f341EdAd04B"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNEZjE4RmY2NUQzMzRDMzIzZkEyQkFEOTcwQTMxODQ0MkI3ODU2QTkiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NzIwMTIyMDU1NiwibmFtZSI6IlRyaXMifQ.5KDXBvnidEGrY9AHCJ8-cS4yugBvUmGtJSPmxWti07U",
+      USER_CONTRACT:"0x1aaE756E1F0A15ddfEF073b4916b5083aba19492",
+      TRIS_NFT:"0x8Eb4A6a3Cb1a6909B85A8069135d469ff3B9795d"
   },
 };

@@ -14,7 +14,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { uploadFileWithState } from '../lib/ipfs-storage'
-import LoadingBar from './loading-bar'
+import LoadingBar from './loading_bar'
 
 interface CustomDrawerProps {
   isOpen: boolean,
@@ -74,7 +74,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
   const resetState = () => {
     setData({
       title: "",
-      file: [],
+      post: [],
       description: "",
       priceByOwner: "",
       isForSale: true,
@@ -85,16 +85,13 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
 
   const submitForm = async (e: any) => {
     e.preventDefault()
-    uploadFileWithState({ file: file[0], setProgress: setProgress }).then((url) => {
-      console.log("This is the URL from direct upload :: ", url)
-      setData((val) => {
-        return {
-          ...val,
-          file: url
-        }
+    if (file[0] !== undefined) {
+      uploadFileWithState({ file: file[0], setProgress: setProgress, setState: setData }).then((url) => {
+        onFormSubmit()
       })
+    } else {
       onFormSubmit()
-    })
+    }
 
   }
 
@@ -102,7 +99,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
     setData((val: any) => {
       return {
         ...val,
-        file: []
+        post: ''
       }
     })
     setFile([])

@@ -8,6 +8,7 @@ import { AppState } from "../_app";
 import Bio from '../../components/bio'
 import { useContext, useEffect, useState } from 'react'
 import image from '../../public/images/background.jpg'
+import MyPost from '../../components/my_post'
 
 const BackButton = () => {
   const handleClick = () => {

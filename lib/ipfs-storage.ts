@@ -2,12 +2,7 @@ import { NFTStorage, File } from "nft.storage";
 
 const API_KEY = process.env.NFT_API_KEY
 
-const createWeb3Storage = () => {
-  const storage: NFTStorage = new NFTStorage({ token: API_KEY })
-  return storage
-};
-
-const uploadFileWithState = async ({ file, setProgress }) => {
+const uploadFileWithState = async ({ file, setProgress, setState }) => {
   console.log("This is the start for the IPFS process....")
   setProgress != undefined ? setProgress('File parsing started.') : undefined
   const storage: NFTStorage = new NFTStorage({ token: API_KEY })
@@ -22,6 +17,12 @@ const uploadFileWithState = async ({ file, setProgress }) => {
   })
   console.log("This is the url :: ", url)
   setProgress != undefined ? setProgress("Uploaded") : undefined
+  setState((val: any) => {
+    return {
+      ...val,
+      post: url.data.image.href
+    }
+  })
   return url.data.image.href
 };
 

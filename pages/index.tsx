@@ -1,6 +1,5 @@
 import ProfileCard from "../components/profile_card";
 import FollowingListTile from "../components/following_list_tile";
-import ProfileImage from "../public/images/profile.png";
 import { AppState } from "./_app";
 import WallUrl from "../public/images/landscape.png";
 import dummy_data from "../lib/dummy_data";
@@ -37,24 +36,21 @@ const Homepage = () => {
 
   const likePost = async ({ id }) => {
 
-    console.log("This is the user data :: ", await state.UserContract.methods.getUserData(state.account).call())
-    //DummyPostData[id].likes += 1
-    //console.log("Liked the following id :: ", id)
+    DummyPostData[id].likes += 1
+    console.log("Liked the following id :: ", id)
   }
 
 
-  //TODO: Have to remove the name and file and place post in place of them
-  //after web3 storage is implemented.
   const [data, setData] = useState({
     title: "",
-    file: undefined,
+    post: '',
     description: "",
     priceByOwner: "",
     isForSale: true,
     isNft: true,
   })
   const [pageIsLoaded, setPageIsLoaded] = useState(false)
-  const { state, setState } = useContext(AppState);
+  const { state } = useContext(AppState);
   const btnRef = useRef()
 
   useEffect(() => {
@@ -68,7 +64,36 @@ const Homepage = () => {
   }
 
   const onFormSubmit = () => {
+    const post = {
+      title: data.title,
+      post: data.post,
+      isNft: data.isNft,
+      priceByOwner: data.priceByOwner,
+      isForSale: data.isForSale,
+      address: state.account
+    }
     console.log(data)
+    state.UserContract.methods.uploadPost(
+      post.title,
+      post.post,
+      post.isNft,
+      post.priceByOwner,
+      post.isForSale,
+      post.address)
+      .send({
+        from: state.account,
+        gasPrice: '40000000000'
+      }).on('receipt', (rec: any) => {
+        console.log("Event emitted :: ", rec.events.PostUploaded.returnValues)
+        setData({
+          title: "",
+          post: '',
+          description: "",
+          priceByOwner: "",
+          isForSale: true,
+          isNft: true,
+        })
+      })
   }
 
   return !pageIsLoaded ?
@@ -131,11 +156,7 @@ const Homepage = () => {
         >
           <CreatePostTile
             onOpen={onOpen}
-            onCameraClick={() => console.log("hello there")}
             btnRef={btnRef}
-            onListClick={() => console.log("hello List there")}
-            onGalleryClick={() => console.log("hello Gallery there")}
-            onScheduleClick={() => console.log("hello Schedule there")}
             onChange={handleChange}
             value={data.title}
             profileUrl={state.User.profileUrl}
@@ -162,10 +183,6 @@ const Homepage = () => {
         </Show>
       </Flex>
     );
-}
-
-const getServerSideProps = async (ctx: any) => {
-
 }
 
 export default Homepage;

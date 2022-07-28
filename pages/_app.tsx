@@ -126,8 +126,10 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     if (UserContract !== undefined) {
       isIt = await UserContract.methods.userIsRegistered(account).call()
       if (isIt) {
+       try{
         currUser = await UserContract.methods.getUserData(account).call()
-        const user = await parseUserData({ User: currUser })
+        const posts = await UserContract.methods.getUserPosts(account).call()
+        const user = await parseUserData({ User: currUser, posts: posts })
         console.log("Current user :: ", user);
         setState((val) => {
           return {
@@ -135,8 +137,11 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
             User: user
           }
         })
-      }
+      } catch(err){
+          console.log(err)
+        }
       console.log("Original registered", isIt);
+       } 
     }
     return isIt
   }

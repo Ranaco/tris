@@ -143,7 +143,7 @@ const Navbar = () => {
             color="lightGrey"
             size="30"
             style={{ cursor: "pointer" }}
-            onClick={() => router.push("/marketplace")}
+            onClick={() => console.log(state.User)}
           />
           <FaInbox color="lightGrey" size="30" style={{ cursor: "pointer" }} />
           <RiNotification4Fill

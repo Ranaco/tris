@@ -16,8 +16,8 @@ interface MyPostProps {
 const MyPost: React.FC<MyPostProps> = ({ title, url, likes, comments }) => {
 
   return (
-    <Box h='500px' minW='300px' w='33%'>
-      <Image src={url} height='60%' width='100%' />
+    <Box h='50%' minW='300px' w='100%' border={'2px solid gold'}>
+      <Image src={url} width='400px' height={'250px'} />
       <Container
         w='100%'
         h='40%'

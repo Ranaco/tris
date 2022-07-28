@@ -9,6 +9,7 @@ import Bio from '../../components/bio'
 import { useContext, useEffect, useState } from 'react'
 import image from '../../public/images/background.jpg'
 import MyPost from '../../components/my_post'
+import { parse } from "cookie";
 
 const BackButton = () => {
   const handleClick = () => {
@@ -89,24 +90,34 @@ const EditableImage = ({ image }) => {
 };
 
 const Profile = () => {
-
+  const [posts, setPosts] = useState([
+    {
+      'title': 'nothing',
+      'post': 'ipfs://bafybeidqzyw4le6molykzrqdnemgzrro4agydsbz2zgbwfgc4ux6ws46qm/1658991591316.png',
+      'likes': '2',
+      'comments': '10'
+    }
+  ])
   const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
   const { state } = useContext(AppState)
   const firstThreeAddress = state.account.slice(state.account.length - 3, state.account.length)
   const lastThreeAddress = state.account.slice(0, 3)
   const [pageIsLoaded, setPageIsLoaded] = useState(false)
-
   useEffect(() => {
     loadPage()
-    console.log("This is a original image :: ", image)
     if (state.User !== undefined) {
-      console.log("This is the web image :: ", state.User.profileUrl)
+      setPosts(state.User.posts) 
+      console.log(posts)
     }
   }, [state.User])
   const loadPage = () => {
     if (state.account !== "0x0") {
       setPageIsLoaded(true)
     }
+  }
+  const parseUrl = (url: any) => {
+    const parsedUrl = 'https://ipfs.io/ipfs/' + url.replace('ipfs://', '')
+    return parsedUrl
   }
   return !pageIsLoaded ?
     <Box></Box>
@@ -196,10 +207,14 @@ const Profile = () => {
                   borderRadius={'20px'}
                   w={isLargerThan1200 ? undefined : '100%'}
                 >
-                  <Box
-                    h='100vh'
-                  >
-                  </Box>
+                  {
+                    posts !== undefined ?
+                      posts.map((post: any, index: number) => {
+                        return (
+                          <MyPost url={parseUrl(post.post)} likes={post.likes} title={post.title} comments={post.commentsCount} key={index} />
+                        )
+                      }) : <Box h='100vh'></Box>
+                  }
                 </Box>
               </Box>
             </Box>

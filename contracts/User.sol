@@ -136,7 +136,7 @@ contract UserContract is ReentrancyGuard{
         Function to upload post. This requires the post parameters, 
         and uploads the post as either nft or a regular post.
     */
-    function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale, address account) public nonReentrant{
+    function uploadPost(string memory title, string memory post, bool isNft, uint256 priceByOwner, bool isForSale, address account) public nonReentrant returns(bytes32){
         require(userIsRegistered[account] == true, "User not registered.");
         User storage currUser = mapToUser[account];
 
@@ -168,6 +168,7 @@ contract UserContract is ReentrancyGuard{
 
         _postsOfUsers[account][callKeccak256(post)] = currPost;
         emit PostUploaded(currPost.title, currPost.post, currPost.postId, currPost.tokenId, priceByOwner, 10, currPost.owner, currPost.seller);
+        return currPost.postId;
     }
 
 

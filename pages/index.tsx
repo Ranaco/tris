@@ -35,15 +35,13 @@ const Homepage = () => {
   }
 
   const likePost = async ({ id }) => {
-
-    DummyPostData[id].likes += 1
     console.log("Liked the following id :: ", id)
   }
 
 
   const [data, setData] = useState({
     title: "",
-    post: '',
+    post: "",
     description: "",
     priceByOwner: "",
     isForSale: true,
@@ -63,39 +61,6 @@ const Homepage = () => {
     }
   }
 
-  const onFormSubmit = () => {
-    const post = {
-      title: data.title,
-      post: data.post,
-      isNft: data.isNft,
-      priceByOwner: data.priceByOwner,
-      isForSale: data.isForSale,
-      address: state.account
-    }
-    console.log(data)
-    state.UserContract.methods.uploadPost(
-      post.title,
-      post.post,
-      post.isNft,
-      post.priceByOwner,
-      post.isForSale,
-      post.address)
-      .send({
-        from: state.account,
-        gasPrice: '40000000000'
-      }).on('receipt', (rec: any) => {
-        console.log("Event emitted :: ", rec.events.PostUploaded.returnValues)
-        setData({
-          title: "",
-          post: '',
-          description: "",
-          priceByOwner: "",
-          isForSale: true,
-          isNft: true,
-        })
-      })
-  }
-
   return !pageIsLoaded ?
     <Box></Box>
     :
@@ -112,7 +77,6 @@ const Homepage = () => {
         <CustomDrawer
           isOpen={isOpen}
           setData={setData}
-          onFormSubmit={onFormSubmit}
           onClose={onClose}
           finalFocusRef={btnRef}
           data={data}

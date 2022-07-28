@@ -11,14 +11,15 @@ import {
   Button,
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { uploadFileWithState } from '../lib/ipfs-storage'
+import { AppState } from '../pages/_app'
 import LoadingBar from './loading_bar'
+
 
 interface CustomDrawerProps {
   isOpen: boolean,
-  onFormSubmit: any,
   setData: any,
   onClose: VoidCallback,
   finalFocusRef: any,
@@ -28,13 +29,13 @@ interface CustomDrawerProps {
 const CustomDrawer: React.FC<CustomDrawerProps> = ({
   isOpen,
   onClose,
-  onFormSubmit,
   setData,
   data,
   finalFocusRef,
 }) => {
   const [progress, setProgress] = useState<string>('No file')
   const [file, setFile] = useState<any>([])
+  const { state, setState } = useContext(AppState)
   const { getRootProps, getInputProps, isDragActive } =
     useDropzone({
       onDrop: (acceptedfile) => {
@@ -51,6 +52,9 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         console.log(file.name);
       },
     });
+
+  useEffect(() => {
+  }, [data.post])
 
   const changeValue = (e: any) => {
     setData((val: any) => {
@@ -74,7 +78,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
   const resetState = () => {
     setData({
       title: "",
-      post: [],
+      post: "",
       description: "",
       priceByOwner: "",
       isForSale: true,
@@ -85,14 +89,58 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
 
   const submitForm = async (e: any) => {
     e.preventDefault()
+
     if (file[0] !== undefined) {
-      uploadFileWithState({ file: file[0], setProgress: setProgress, setState: setData }).then((url) => {
-        onFormSubmit()
+      uploadFileWithState({ file: file[0], setProgress: setProgress }).then((val) => {
+        if (val) {
+          const postData = {
+            title: data.title,
+            description: data.description,
+            priceByOwner: data.priceByOwner,
+            isForSale: data.isForSale,
+            isNft: data.isNft
+          }
+          console.log("This is the post :: ", postData)
+          if (val) {
+            state.UserContract.methods.uploadPost(
+              postData.title,
+              val,
+              postData.isNft,
+              postData.priceByOwner,
+              postData.isForSale,
+              state.account).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec: any) => {
+                console.log("Upload post event :: ", rec.events.PostUploaded.returnValues)
+                console.log('This is the transaction hash :: ', rec.transactionHash)
+                console.log("This is the full receipt :: ", rec)
+                const postId = rec.events.PostUploaded.returnValues.postId
+                setState((val) => ({
+                  ...val,
+                  User: {
+                    ...val.User,
+                    postCount: [...val.User.postCount, postId]
+                  }
+                }))
+              })
+            console.log(state.User)
+          }
+          else {
+            window.alert("No URL")
+          }
+        }
       })
     } else {
-      onFormSubmit()
+      console.log("Uploading Post to Blockchain/Contract without post")
+      state.UserContract.methods.uploadPost(
+        data.title,
+        data.post,
+        data.isNft,
+        data.priceByOwner,
+        data.isForSale,
+        state.account).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec: any) => {
+          console.log("Upload post event :: ", rec.events.PostUploaded.returnValues)
+          console.log('This is the transaction hash :: ', rec.transactionHash)
+        })
     }
-
   }
 
   const removePost = () => {

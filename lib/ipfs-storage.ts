@@ -2,7 +2,7 @@ import { NFTStorage, File } from "nft.storage";
 
 const API_KEY = process.env.NFT_API_KEY
 
-const uploadFileWithState = async ({ file, setProgress, setState }) => {
+const uploadFileWithState = async ({ file, setProgress }) => {
   console.log("This is the start for the IPFS process....")
   setProgress != undefined ? setProgress('File parsing started.') : undefined
   const storage: NFTStorage = new NFTStorage({ token: API_KEY })
@@ -17,12 +17,6 @@ const uploadFileWithState = async ({ file, setProgress, setState }) => {
   })
   console.log("This is the url :: ", url)
   setProgress != undefined ? setProgress("Uploaded") : undefined
-  setState((val: any) => {
-    return {
-      ...val,
-      post: url.data.image.href
-    }
-  })
   return url.data.image.href
 };
 
@@ -42,7 +36,7 @@ const uploadFile = async ({ file }) => {
   return url.data.image.href
 }
 
-const parseUserData = async ({ User }) => {
+const parseUserData = async ({ User, posts }) => {
 
   const rawUrl = (User.avatarUrl as string).replace("ipfs://", '')
   const parsedUrl = "https://ipfs.io/ipfs/" + rawUrl
@@ -51,6 +45,7 @@ const parseUserData = async ({ User }) => {
     name: User.name,
     userName: User.userName,
     profileUrl: parsedUrl,
+    posts: posts,
     wallUrl: User.wallUrl,
     address: User.userAddress,
     following: User.following,

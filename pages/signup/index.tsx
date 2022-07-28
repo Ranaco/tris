@@ -144,7 +144,7 @@ const MastHead = () => {
 const SignUp = () => {
   const router = useRouter()
   const [disabled, setDisabled] = useState(false)
-  const { state, setState } = useContext(AppState);
+  const { state } = useContext(AppState);
   const [file, setFile] = useState([]);
   useEffect(
     () => () => {
@@ -155,6 +155,7 @@ const SignUp = () => {
 
   const [data, setData] = useState({
     firstName: "",
+    avatarUrl: '',
     lastName: "",
     email: "",
     bio: "",
@@ -191,7 +192,7 @@ const SignUp = () => {
           userData.avatarUrl,
           userData.email,
           userData.bio,
-          userData.wallUrl).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec) => {
+          userData.wallUrl).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec: any) => {
             console.log(rec)
             console.log("This is receipt return values, ", rec.events.UserCreated.returnValues)
             console.log('This is receipt, ', rec)

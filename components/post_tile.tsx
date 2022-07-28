@@ -15,8 +15,9 @@ const CustomButton = ({ onClick, icon, buttonText }) => {
 
   return (
     <Button
-      bg={windowDimension.width < "605" ? "textGrey" : "lightGrey"}
+      bg={windowDimension.width < "605" ? "textGrey" : "rgba(40, 52, 62, 0.5)"}
       h="50px"
+      css={{ backdropFilter: 'blur(30px)' }}
       p={"10px"}
       leftIcon={icon}
       borderRadius="15px"
@@ -52,7 +53,8 @@ const PostTile: React.FC<PostTileInterface> = ({ post, postComment, id, likePost
   return (
     <StyledDiv
       minH="200px"
-      bg="textGrey"
+      bg="rgba(27, 39, 48, 0.5)"
+      css={{ backdropFilter: 'blur(30px)' }}
       w="100%"
       borderRadius="20px"
       display="flex"

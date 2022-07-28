@@ -1,241 +1,83 @@
-import { Box, Flex, useMediaQuery, Text } from "@chakra-ui/react";
-import { StyledDiv } from "../../lib/custom-component";
-import Layout from "../../components/layouts/secondary";
-import { IoIosArrowBack } from "react-icons/io";
-import Image from "next/image";
-import { TbEdit } from "react-icons/tb";
-import { AppState } from "../_app";
-import Bio from '../../components/bio'
-import { useContext, useEffect, useState } from 'react'
-import image from '../../public/images/background.jpg'
-import MyPost from '../../components/my_post'
-import { parse } from "cookie";
-
-const BackButton = () => {
-  const handleClick = () => {
-    history.go(-1);
-  };
-  return (
-    <Box
-      cursor="pointer"
-      bg="lightGrey"
-      justifyContent={"center"}
-      onClick={handleClick}
-      w="40px"
-      borderRadius="10px"
-      m="10px"
-      h="40px"
-      display="flex"
-      alignItems="center"
-    >
-      <IoIosArrowBack size="2.0rem" />
-    </Box>
-  );
-};
-
-const EditableImage = ({ image }) => {
-
-  const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
-
-  return (
-    <StyledDiv
-      maxH='100%'
-      h='30.4%'
-      mb='auto'
-      display='flex'
-      w='100%'
-      alignItems={'center'}
-      justifyContent='center'
-      flexDirection={'column'}>
-      <StyledDiv
-        position={'fixed'}
-        w={isLargerThan1200 ? "57%" : "93.7%"}
-        h='30%'
-        bg='textGrey'
-        mt='28px'
-        borderRadius={isLargerThan1200 ? "0px 0px 20px 20px" : "20px"} />
-      <Box
-        mt={isLargerThan1200 ? '30%' : '285px'}
-        w='100%'
-        display={'flex'}
-        justifyContent={isLargerThan1200 ? 'start' : 'center'}
-      >
-        <Box alignSelf={'center'}>
-          <Image
-            src={image}
-            style={{ borderRadius: "100px" }}
-            alt="profile"
-            height="150px"
-            width="150px"
-          />
-        </Box>
-        <TbEdit
-          style={{
-            cursor: 'pointer',
-            position: "relative",
-            backgroundColor: "black",
-            borderRadius: "30px",
-            left: '-30px',
-            height: "30px",
-            width: "30px",
-            padding: "6px",
-          }}
-          onClick={() => window.localStorage.setItem("isAuthenticated", "false")}
-          size="20px"
-          color="white"
-        />
-      </Box>
-    </StyledDiv>
-  );
-};
+import {
+  Box,
+  Text,
+  Container
+} from '@chakra-ui/react'
+import { StyledDiv } from '../../lib/custom-component'
+import { useEffect, useContext, useState } from 'react'
+import Layout from '../../components/layouts/secondary'
+import { AppState } from '../_app'
+import Image from 'next/image'
 
 const Profile = () => {
-  const [posts, setPosts] = useState([
-    {
-      'title': 'nothing',
-      'post': 'ipfs://bafybeidqzyw4le6molykzrqdnemgzrro4agydsbz2zgbwfgc4ux6ws46qm/1658991591316.png',
-      'likes': '2',
-      'comments': '10'
-    }
-  ])
-  const [isLargerThan1200] = useMediaQuery('(min-width: 1200px)')
+
   const { state } = useContext(AppState)
-  const firstThreeAddress = state.account.slice(state.account.length - 3, state.account.length)
-  const lastThreeAddress = state.account.slice(0, 3)
   const [pageIsLoaded, setPageIsLoaded] = useState(false)
-  useEffect(() => {
-    loadPage()
-    if (state.User !== undefined) {
-      setPosts(state.User.posts) 
-      console.log(posts)
-    }
-  }, [state.User])
+
   const loadPage = () => {
-    if (state.account !== "0x0") {
+    if (state.account !== '0x0') {
       setPageIsLoaded(true)
     }
   }
-  const parseUrl = (url: any) => {
-    const parsedUrl = 'https://ipfs.io/ipfs/' + url.replace('ipfs://', '')
-    return parsedUrl
-  }
+
+  useEffect(() => {
+    loadPage()
+  }, state.User)
+
   return !pageIsLoaded ?
-    <Box></Box>
-    :
+    <Box></Box> :
     (
-      <Box
-        h='100%'
-        w='100%'
+      <StyledDiv
         display='flex'
-        alignSelf='center'
-        justifyContent='center'
+        alignItems={'center'}
+        justifyContent={'center'}
+        w='100%'
+        h='100%'
+        p='20px'
+        gap='20px'
       >
-        <Flex
-          alignSelf={'center'}
-          w='95%'
-          justifyContent={'end'}
-          bg='#213545'
-          h='90%'
-          borderRadius={'20px'}
-        >
-          {
-            isLargerThan1200 ?
-              <Box
-                flexBasis={'20%'}
-                bgImage="url('https://w0.peakpx.com/wallpaper/190/187/HD-wallpaper-whatsapp-cartoon-skull-dark-dead-punk.jpg')"
-                css={{ backdropFilter: "blur(10px)" }}
-                borderRadius={'20px 0px 0px 20px'}
-                opacity='0.4'
-                h='100%'
-              /> : undefined
-          }
-          <Box
-            flexBasis={isLargerThan1200 ? '60%' : '100%'}
-            display='flex'
-            alignItems={'start'}
-            justifyContent='end'
-            flexDir={'column'}
-            h='100%'
-            w={isLargerThan1200 ? '60%' : '100%'}>
-            <EditableImage image={state.User.profileUrl} />
-            <Box
+        <StyledDiv bg="rgba(27, 39, 48, 0.5)" borderRadius={'20px'} flexBasis={'30%'} h='100%' css={{ backdropFilter: 'blur(30px)' }}>
+          <Box>
+            <StyledDiv
               w='100%'
-              h='65%'
               display={'flex'}
-              alignItems='center'
-              justifyContent={'space-between'}
-              flexDirection={isLargerThan1200 ? 'row' : 'column'}
-            >
-              <Box
-                pt='8%'
-                w={isLargerThan1200 ? '30%' : '70%'}
-                h='100%'
-              >
-                <Text pl='30px' pt='30px'>
-                  {firstThreeAddress}...{lastThreeAddress}
-                </Text>
-                <Text
-                  mt={isLargerThan1200 ? '0px' : '60px'}
+              justifyContent='center'
+              pt='30px'
+              flexDirection='column'
+              alignItems={'center'}>
+              <Image src={state.User.profileUrl} height='200px' width={'200px'} style={{ borderRadius: '100%' }} />
+              <StyledDiv>
+                <Box
                   w='100%'
-                  pl='30px'
-                  fontSize={'2em'}
-                  fontWeight='bold'
-                  h='50px'>
-                  {state.User.name}
-                </Text>
-                <Text fontSize='1.2em' pl='30px' color='grey'>
-                  @{state.User.userName}
-                </Text>
-                <Bio bio={state.User.bio} />
-              </Box>
-              <Box
-                w='100%'
-                h='100%'
-                overflow={'scroll'}
-              >
-                <Box h='50px' display='flex' alignItems='center' justifyContent={'start'}>
-                  <Text fontSize='1.4em' pl='5px'>
-                    Uploads
+                  display='flex'
+                  alignItems='center'
+                  justifyContent={'center'}
+                  flexDirection='column'
+                  gap='10px'
+                >
+                  <Text fontSize='2em'>
+                    {state.User.name}
+                  </Text>
+                  <Text fontSize='1.5em' color='grey'>
+                    @{state.User.userName}
+                  </Text>
+                  <Text fontSize={'1.5em'}>
+                    {state.User.email}
+                  </Text>
+                  <Text fontSize='1.5em' pt='30px' >
+                    {state.User.bio}
                   </Text>
                 </Box>
-                <Box
-                  pt='10%'
-                  mt='5px'
-                  flex={isLargerThan1200 ? '1' : undefined}
-                  ml={isLargerThan1200 ? '5px' : undefined}
-                  bg='blackAlpha.200'
-                  borderRadius={'20px'}
-                  w={isLargerThan1200 ? undefined : '100%'}
-                >
-                  {
-                    posts !== undefined ?
-                      posts.map((post: any, index: number) => {
-                        return (
-                          <MyPost url={parseUrl(post.post)} likes={post.likes} title={post.title} comments={post.commentsCount} key={index} />
-                        )
-                      }) : <Box h='100vh'></Box>
-                  }
-                </Box>
-              </Box>
-            </Box>
+              </StyledDiv>
+            </StyledDiv>
           </Box>
-          {
-            isLargerThan1200 ?
-              <Box
-                bg='blue'
-                flexBasis={'20%'}
-                bgImage="url('https://w0.peakpx.com/wallpaper/190/187/HD-wallpaper-whatsapp-cartoon-skull-dark-dead-punk.jpg')"
-                css={{ backdropFilter: "blur(10px)" }}
-                borderRadius={'0px 20px 20px 0px'}
-                opacity='0.4'
-                h='100%'
-              /> : undefined
-          }
-        </Flex >
-      </Box >
+        </StyledDiv>
+        <StyledDiv bg="rgba(27, 39, 48, 0.5)" flexBasis={'70%'} borderRadius='10px' h='100%' css={{ backdropFilter: 'blur(30px)' }}>
+        </StyledDiv>
+      </StyledDiv>
     )
 }
 
-Profile.getLayout = (page: any) => <Layout title={"Profile"}>{page}</Layout>
+Profile.getLayout = page => (<Layout title={"Profile"}>{page}</Layout>)
 
 export default Profile

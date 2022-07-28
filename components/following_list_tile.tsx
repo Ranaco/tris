@@ -59,7 +59,8 @@ const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) 
   return (
     <StyledDiv
       w="100%"
-      bg="textGrey"
+      bg="rgba(27, 39, 48, 0.5)"
+      css={{ backdropFilter: 'blur(30px)' }}
       borderRadius="20px"
       p="20px"
       display="flex"

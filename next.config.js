@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com", "i.pravatar.cc", "xsgames.co", "ipfs.io"],
+    domains: ["images.unsplash.com", "i.pravatar.cc", "xsgames.co", "ipfs.io", "i.gifer.com"],
     loader: 'akamai',
     path: ''
   },

@@ -53,8 +53,6 @@ const Main: React.FC<Main> = ({ children, router }) => {
       >
         <NavBar />
         <StyledDiv
-          backgroundImage="url(https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80)"
-          backgroundPosition="center"
           maxH="100%"
           h="100vh"
           w="100%"

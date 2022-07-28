@@ -64,7 +64,8 @@ const TrendForYou = ({ data }) => {
       w="100%"
       p="20px"
       h="70%"
-      bg="textGrey"
+      bg="rgba(27, 39, 48, 0.5)"
+      css={{ backdropFilter: 'blur(30px)' }}
       borderRadius="20px"
       overflowY="scroll"
     >

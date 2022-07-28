@@ -81,13 +81,13 @@ const ProfileCard: React.FC<ProfileCardInterface> = ({
       w="100%"
       borderRadius="20px"
       flexDirection="column"
-      bg="textGrey"
+      bg="rgba(27, 39, 48, 0.5)"
+      css={{ backdropFilter: 'blur(30px)' }}
       display="flex"
       alignItems="center"
       justifyContent="start"
     >
-      <Box w="22.5%" h="15%" bg='blackAlpha.400' borderRadius={'10px 10px 0px 0px '} position={'fixed'} />
-      <Box borderRadius="100px" h="25%" w="25%" zIndex={"1"} paddingTop="18%">
+      <Box borderRadius="100px" h="25%" zIndex={"1"} paddingTop="18%">
         <Image height='100px' width='100px' style={{ borderRadius: '100px' }} src={profileUrl} alt="profile_url" />
       </Box>
       <Text fontSize="1em" paddingTop="20%" fontWeight="bold">

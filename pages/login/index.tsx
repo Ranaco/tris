@@ -99,7 +99,7 @@ const Login = () => {
       console.log("This is the localStorage value :: ", window.localStorage.getItem("isAuthenticated"));
       if (account !== undefined && state.isRegistered === false) {
         router.replace("/signup");
-      } else if (account !== undefined && window.localStorage.getItem("isAuthenticated") == "true") {
+      } else if (account !== undefined && state.isRegistered === true) {
         router.replace("/");
       }
     });

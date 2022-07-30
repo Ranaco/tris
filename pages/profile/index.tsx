@@ -1,7 +1,8 @@
 import {
   Box,
   Text,
-  Container
+  Button,
+  SimpleGrid
 } from '@chakra-ui/react'
 import { StyledDiv } from '../../lib/custom-component'
 import { useEffect, useContext, useState } from 'react'
@@ -10,9 +11,12 @@ import { AppState } from '../_app'
 import Image from 'next/image'
 import { FollowPanel } from '../../components/profile_card'
 import MyPost from '../../components/my_post'
+import { useRouter } from 'next/router'
+import getWindowDimensions from '../../lib/device-viewport'
 
 const Profile = () => {
 
+  const size = getWindowDimensions()
   const { state } = useContext(AppState)
   const [pageIsLoaded, setPageIsLoaded] = useState(false)
   const [posts, setPosts] = useState([
@@ -26,18 +30,33 @@ const Profile = () => {
   const loadPage = () => {
     if (state.account !== '0x0') {
       setPageIsLoaded(true)
+      setPosts(state.User.posts)
     }
   }
+
+  const router = useRouter()
 
   useEffect(() => {
     loadPage()
   }, [state.User])
+
+  const logOut = async () => {
+    const val = await state.disconnectWallet()
+    if (val) {
+      window.localStorage.setItem('isAuthenticated', 'false')
+      router.replace('/login').then((val) => {
+        location.reload()
+      })
+    }
+  }
+
 
   return !pageIsLoaded ?
     <Box></Box> :
     (
       <StyledDiv
         display='flex'
+        flexDirection={size.width < 950 ? 'column' : 'row'}
         alignItems={'center'}
         justifyContent={'center'}
         w='100%'
@@ -49,7 +68,10 @@ const Profile = () => {
           overflowY={'scroll'}
           bg="rgba(27, 39, 48, 0.5)"
           borderRadius={'20px'}
-          flexBasis={'30%'} h='100%'
+          flexBasis={size.width < 950 ? undefined : '30%'}
+          width={size.width < 950 ? '100%' : undefined}
+          minH='400px'
+          h='100%'
           css={{ backdropFilter: 'blur(30px)' }}>
           <Box>
             <StyledDiv
@@ -59,7 +81,7 @@ const Profile = () => {
               pt='30px'
               flexDirection='column'
               alignItems={'center'}>
-              <Image src={state.User.profileUrl} height='200px' width={'200px'} style={{ borderRadius: '100%' }} />
+              <Image src={state.User.profileUrl} height='120%' width={'120%'} style={{ borderRadius: '100%' }} />
               <StyledDiv>
                 <Box
                   w='100%'
@@ -92,11 +114,24 @@ const Profile = () => {
           flexBasis={'70%'}
           borderRadius='10px'
           h='100%'
+          overflowY='scroll'
           display={'flex'}
           alignItems='center'
           justifyContent='start'
           flexDirection={'column'}
           css={{ backdropFilter: 'blur(30px)' }}>
+          <Box flex='1'>
+            <SimpleGrid columns={[1, 1, 2]} mt='30px' gap={12}>
+              {
+                posts.map((post, index) => {
+                  return (<MyPost url={post.post} likes={post.likes} title={post.title} comments={post.commentsCount} key={index} />)
+                })
+              }
+            </SimpleGrid>
+          </Box>
+          <StyledDiv pb='30px' mt='30px' pr='30px' w='100%' display='flex' alignItems='center' justifyContent='end' h='70px'>
+            <Button onClick={logOut}> Log out</Button>
+          </StyledDiv>
         </StyledDiv>
       </StyledDiv>
     )

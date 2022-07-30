@@ -24,7 +24,7 @@ export interface IProviderProps {
   children?: any;
 }
 
-type AppContextState = { account: string, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any, User: any };
+type AppContextState = { account: string, disconnectWallet: any, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any, User: any };
 
 type AppContextValue = {
   state: AppContextState;
@@ -72,13 +72,33 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     account: "0x0",
     TrisNft: undefined,
     provider: undefined,
+    disconnectWallet: undefined,
     UserContract: undefined,
     web3: undefined,
     isRegistered: false,
     User: undefined,
   });
 
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null)
+
   useEffect(() => {
+
+    const disconnectWallet = () => {
+      web3Modal.clearCachedProvider()
+
+      try {
+        if (provider && (provider as any).sequence) {
+          const wallet = (provider as any).sequence as sequence.Wallet
+          wallet.disconnect()
+        }
+        setProvider(null)
+        return true
+      } catch (err) {
+        console.log(err)
+        return false
+      }
+    }
+
     const connect = async () => {
       if (web3Modal.cachedProvider) {
         await connectWallet().then((res) => {
@@ -90,7 +110,8 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
               return {
                 ...val,
                 TrisNft: Tris,
-                UserContract: User
+                UserContract: User,
+                disconnectWallet: disconnectWallet
               }
             })
             getRegisteredUser({ UserContract: User, account: account }).then((isIt) => {
@@ -126,22 +147,22 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     if (UserContract !== undefined) {
       isIt = await UserContract.methods.userIsRegistered(account).call()
       if (isIt) {
-       try{
-        currUser = await UserContract.methods.getUserData(account).call()
-        const posts = await UserContract.methods.getUserPosts(account).call()
-        const user = await parseUserData({ User: currUser, posts: posts })
-        console.log("Current user :: ", user);
-        setState((val) => {
-          return {
-            ...val,
-            User: user
-          }
-        })
-      } catch(err){
+        try {
+          currUser = await UserContract.methods.getUserData(account).call()
+          const posts = await UserContract.methods.getUserPosts(account).call()
+          const user = await parseUserData({ User: currUser, posts: posts })
+          console.log("Current user :: ", user);
+          setState((val) => {
+            return {
+              ...val,
+              User: user
+            }
+          })
+        } catch (err) {
           console.log(err)
         }
-      console.log("Original registered", isIt);
-       } 
+        console.log("Original registered", isIt);
+      }
     }
     return isIt
   }
@@ -162,6 +183,7 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
       (provider as any).sequence = await wallet.sequence;
     }
     const account = await getAccounts(provider);
+    setProvider(provider)
     return { web3, account };
   };
 

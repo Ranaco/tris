@@ -4,7 +4,7 @@ import Image from "next/image";
 import * as React from 'react'
 import { useRouter } from 'next/router'
 
-const FollowPanel = ({ following, followers, props }) => {
+export const FollowPanel = ({ following, followers, props }) => {
   return (
     <Box
       display="flex"

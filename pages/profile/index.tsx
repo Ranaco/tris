@@ -97,9 +97,6 @@ const Profile = () => {
           justifyContent='start'
           flexDirection={'column'}
           css={{ backdropFilter: 'blur(30px)' }}>
-          {posts.map((post, index) => {
-
-          })}
         </StyledDiv>
       </StyledDiv>
     )

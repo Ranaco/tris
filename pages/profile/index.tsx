@@ -73,7 +73,7 @@ const Profile = () => {
           minH='400px'
           h='100%'
           css={{ backdropFilter: 'blur(30px)' }}>
-          <Box>
+          <Box flex='1'>
             <StyledDiv
               w='100%'
               display={'flex'}
@@ -86,8 +86,6 @@ const Profile = () => {
                 <Box
                   w='100%'
                   display='flex'
-                  alignItems='center'
-                  justifyContent={'center'}
                   flexDirection='column'
                   gap='10px'
                 >
@@ -102,12 +100,15 @@ const Profile = () => {
                   </Text>
                 </Box>
               </StyledDiv>
-              <FollowPanel followers={state.User.followersCount} following={state.User.followingCount} props={{ marginTop: '8%', height: '130px', fontSize: '1.5em' }} />
+              <FollowPanel followers={state.User.followersCount} following={state.User.followingCount} props={{ marginTop: '8%', height: '130px', fontSize: '1.5em', width: '100%' }} />
               <Text mt='30px' pb='20px' fontSize={'1.5em'}>
                 Email: {state.User.email}
               </Text>
             </StyledDiv>
           </Box>
+          <StyledDiv pb='30px' position='relative' bottom='-30%' pr='30px' w='100%' display='flex' alignItems='center' justifyContent='end' h='70px'>
+            <Button onClick={logOut}> Log out</Button>
+          </StyledDiv>
         </StyledDiv>
         <StyledDiv
           bg="rgba(27, 39, 48, 0.5)"
@@ -129,9 +130,6 @@ const Profile = () => {
               }
             </SimpleGrid>
           </Box>
-          <StyledDiv pb='30px' mt='30px' pr='30px' w='100%' display='flex' alignItems='center' justifyContent='end' h='70px'>
-            <Button onClick={logOut}> Log out</Button>
-          </StyledDiv>
         </StyledDiv>
       </StyledDiv>
     )

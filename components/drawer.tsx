@@ -112,15 +112,18 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
                 console.log("Upload post event :: ", rec.events.PostUploaded.returnValues)
                 console.log('This is the transaction hash :: ', rec.transactionHash)
                 console.log("This is the full receipt :: ", rec)
-                const postId = rec.events.PostUploaded.returnValues.postId
                 setState((val) => ({
                   ...val,
                   User: {
                     ...val.User,
-                    postCount: [...val.User.postCount, postId]
+                    posts: [...val.User.posts, postData]
                   }
                 }))
+                resetState()
+                setFile([])
+                onClose()
               })
+
             console.log(state.User)
           }
           else {

@@ -57,6 +57,8 @@ contract UserContract is ReentrancyGuard{
     address private trisNftAddress;
     address private owner;
     User[] private usersList;
+    Counters.Counter totalPostCount;
+    mapping(uint256 => Post) totalPost;
     mapping(address => mapping(bytes32 => Post)) private _postsOfUsers;
 
     constructor(address nftAddress, address ownerAddress){
@@ -165,7 +167,8 @@ contract UserContract is ReentrancyGuard{
                 seller: isNft ? payable(account) : payable(address(0))
             }
         );
-
+        totalPostCount.increment();
+        totalPost[totalPostCount.current()] = currPost;
         _postsOfUsers[account][callKeccak256(post)] = currPost;
         emit PostUploaded(currPost.title, currPost.post, currPost.postId, currPost.tokenId, priceByOwner, 10, currPost.owner, currPost.seller);
         return currPost.postId;
@@ -256,6 +259,19 @@ contract UserContract is ReentrancyGuard{
         currPost.commentsCount += 1;
         currPost.comments.push(comment);
     }
+
+    function getAllPost(address userAddress) public view returns(Post[] memory){
+        require(userIsRegistered[userAddress] == true, "User not registered.");
+        uint256 allPostCount = totalPostCount.current();
+        uint256 currentIndex = 0;
+        Post[] memory posts = new Post[](allPostCount);
+        for(uint i = 1; i <= allPostCount; i++){
+            Post storage currPost = totalPost[i];
+            posts[currentIndex] = currPost;
+            currentIndex += 1;
+        }
+        return posts;
+    } 
 
     function getUserData(address account) public view returns(User memory){
         require(userIsRegistered[account] == true, "User not registered.");

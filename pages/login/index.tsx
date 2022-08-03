@@ -139,7 +139,7 @@ const Login = () => {
             fontFamily="Megrim"
           >
             <TrisLogo />
-            <Text position="fixed" top="17%" color="white" fontSize="15em">
+            <Text position="fixed" top="17%" fontSize="15em">
               Tris
             </Text>
             <StyledDiv
@@ -154,7 +154,6 @@ const Login = () => {
               top="35%"
               fontFamily="'M PLUS Rounded 1c'"
               textAlign="center"
-              color="white"
               fontSize="4.4em"
               alignSelf="center"
             >

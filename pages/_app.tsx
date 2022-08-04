@@ -155,6 +155,20 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
   }, [state.account]);
 
+  function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+
+    while (currentIndex != 0) {
+
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  }
   const getRegisteredUser = async ({ UserContract, account }) => {
     let isIt: boolean
     let currUser: any;
@@ -165,13 +179,32 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
           currUser = await UserContract.methods.getUserData(account).call()
           const posts = await UserContract.methods.getUserPosts(account).call()
           const user = await parseUserData({ User: currUser, posts: posts })
-          const allPosts = await UserContract.methods.getAllPost(account).call()
+          let frozenPosts = await UserContract.methods.getAllPost(account).call()
+          let allPosts = JSON.parse(JSON.stringify(frozenPosts))
+          allPosts = allPosts.map((post: any) => {
+            return {
+              post: post[0],
+              postId: post[1],
+              title: post[3],
+              priceByOwner: post[10],
+              basePrice: post[11],
+              isForSale: post,
+              isNft: post[12],
+              owner: post[7],
+              seller: post[8],
+              tokenId: post[13],
+              comments: post[9],
+              commentsCount: post[6],
+              likes: post[2],
+              postIsBought: post[5]
+            }
+          })
           console.log("Current user :: ", user);
           setState((val) => {
             return {
               ...val,
               User: user,
-              posts: allPosts
+              posts: shuffle(allPosts)
             }
           })
         } catch (err) {

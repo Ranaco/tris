@@ -48,8 +48,6 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
           })
         );
         setProgress('File selected.')
-        console.log(file.size.toString());
-        console.log(file.name);
       },
     });
 
@@ -100,7 +98,6 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
             isForSale: data.isForSale,
             isNft: data.isNft
           }
-          console.log("This is the post :: ", postData)
           if (val) {
             state.UserContract.methods.uploadPost(
               postData.title,
@@ -109,22 +106,12 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
               postData.priceByOwner,
               postData.isForSale,
               state.account).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec: any) => {
-                console.log("Upload post event :: ", rec.events.PostUploaded.returnValues)
                 console.log('This is the transaction hash :: ', rec.transactionHash)
-                console.log("This is the full receipt :: ", rec)
-                setState((val) => ({
-                  ...val,
-                  User: {
-                    ...val.User,
-                    posts: [...val.User.posts, postData]
-                  }
-                }))
                 resetState()
                 setFile([])
-                onClose()
+                location.reload()
               })
 
-            console.log(state.User)
           }
           else {
             window.alert("No URL")
@@ -140,7 +127,6 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         data.priceByOwner,
         data.isForSale,
         state.account).send({ from: state.account, gasPrice: '40000000000' }).on('receipt', (rec: any) => {
-          console.log("Upload post event :: ", rec.events.PostUploaded.returnValues)
           console.log('This is the transaction hash :: ', rec.transactionHash)
         })
     }

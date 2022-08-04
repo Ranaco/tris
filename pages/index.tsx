@@ -57,6 +57,7 @@ const Homepage = () => {
 
   const loadPage = () => {
     if (state.account !== "0x0") {
+      console.log("This is the state, ", state)
       setPageIsLoaded(true)
     }
   }
@@ -133,8 +134,8 @@ const Homepage = () => {
             alignItems="center"
             justifyContent="center"
           >
-            {DummyPostData.map((post, index) => {
-              return <PostTile likePost={likePost} post={post} id={index} postComment={postComment} />;
+            {state.posts.map((post, index) => {
+              return <PostTile post={post} />;
             })}
           </Box>
         </Square>

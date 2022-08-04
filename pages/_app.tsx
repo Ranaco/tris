@@ -24,7 +24,7 @@ export interface IProviderProps {
   children?: any;
 }
 
-type AppContextState = { account: string, disconnectWallet: any, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any, User: any };
+type AppContextState = { account: string, disconnectWallet: any, posts: any, web3: any, provider: any, TrisNft: any, UserContract: any, isRegistered: any, User: any };
 
 type AppContextValue = {
   state: AppContextState;
@@ -35,7 +35,7 @@ export const AppState = React.createContext<AppContextValue | undefined>(
   undefined
 );
 
-let providerOptions;
+let providerOptions: any;
 
 if (typeof window !== "undefined") {
   if (!window?.ethereum?.isSequence) {
@@ -52,7 +52,7 @@ if (typeof window !== "undefined") {
   }
 }
 
-let web3Modal;
+let web3Modal: any;
 
 if (typeof window !== 'undefined') {
   web3Modal = new Web3Modal({
@@ -74,6 +74,22 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
     provider: undefined,
     disconnectWallet: undefined,
     UserContract: undefined,
+    posts: [{
+      basePrice: "10",
+      comments: [],
+      commentsCount: "0",
+      isForSale: true,
+      isNft: true,
+      likes: "0",
+      owner: "0x85d0FB03bDe8D9F5446660609D81505e895DaF15",
+      post: "ipfs://bafybeida73knuhq2jnwjaktmisju4xhbot2hf67zzi6ly5lnh7u6axlr2a/1659539109594.png",
+      postId: "0xc201826ef5ba10f51eb2543f1bcc9d1fc375994deb8f42224ef7a55af313b049",
+      postIsBought: false,
+      priceByOwner: "100",
+      seller: "0xA9605c1819BF88140b0B8C6DBaC52A71746E3dB2",
+      title: "Creative",
+      tokenId: "1"
+    }],
     web3: undefined,
     isRegistered: false,
     User: undefined,
@@ -103,7 +119,6 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
       if (web3Modal.cachedProvider) {
         await connectWallet().then((res) => {
           const { web3, account } = res;
-          console.log("This is the main web3", web3);
           loadContracts({ state, setState, web3 }).then((data) => {
             const { Tris, User } = data;
             setState((val) => {
@@ -122,7 +137,6 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
                     isRegistered: isIt
                   }
                 })
-                console.log("Is registered", isIt);
                 if (isIt) {
                   window.localStorage.setItem("isAuthenticated", "true");
                 } else {
@@ -151,17 +165,18 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
           currUser = await UserContract.methods.getUserData(account).call()
           const posts = await UserContract.methods.getUserPosts(account).call()
           const user = await parseUserData({ User: currUser, posts: posts })
+          const allPosts = await UserContract.methods.getAllPost(account).call()
           console.log("Current user :: ", user);
           setState((val) => {
             return {
               ...val,
-              User: user
+              User: user,
+              posts: allPosts
             }
           })
         } catch (err) {
           console.log(err)
         }
-        console.log("Original registered", isIt);
       }
     }
     return isIt
@@ -243,8 +258,5 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
   );
 };
 
-const getServerSideProps = async (ctx: any) => {
-
-}
 
 export default Website;

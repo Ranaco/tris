@@ -77,8 +77,8 @@ const Profile = () => {
             <StyledDiv
               w='100%'
               display={'flex'}
-              justifyContent='center'
               pt='30px'
+              justifyContent='center'
               flexDirection='column'
               alignItems={'center'}>
               <Image src={state.User.profileUrl} height='120%' width={'120%'} style={{ borderRadius: '100%' }} />
@@ -86,6 +86,7 @@ const Profile = () => {
                 <Box
                   w='100%'
                   display='flex'
+                  textAlign='center'
                   flexDirection='column'
                   gap='10px'
                 >

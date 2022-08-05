@@ -39,9 +39,11 @@ const CustomButton = ({ onClick, icon, buttonText }) => {
 
 interface PostTileInterface {
   post: any,
+  onLike: any,
+  onComment: any
 }
 
-const PostTile: React.FC<PostTileInterface> = ({ post, }) => {
+const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
 
   const { state } = useContext(AppState)
   const [currentUser, setCurrentUser] = useState({
@@ -77,7 +79,12 @@ const PostTile: React.FC<PostTileInterface> = ({ post, }) => {
   const [commentOn, setCommentOn] = useState(false)
   const commentClicked = (e: any) => {
     e.preventDefault()
-    setCommentOn(false)
+    onComment({
+      owner: post.seller,
+      id: post.postId,
+      comment: comment
+    })
+    setCommentOn(val => !val)
   }
   const [comment, setComment] = useState('')
   return !isLoaded ?
@@ -155,7 +162,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, }) => {
           justifyContent="start"
         >
           <Text fontSize="1.3em">{post.title}</Text>
-          <Box w="87%" h="20%" pb="30px">
+          <Box w="87%" h="20%" pb="30px" pt='20px'>
             <Image
               style={{ borderRadius: "20px" }}
               src={url}
@@ -183,6 +190,10 @@ const PostTile: React.FC<PostTileInterface> = ({ post, }) => {
         <ButtonGroup w="100%" gap="30px" pl="11%" pr="11%" pt="4px" pb="30px">
           <CustomButton
             onClick={() => {
+              onLike({
+                owner: post.seller,
+                id: post.postId,
+              })
             }}
             icon={<RiHeart2Fill size="20px" />}
             buttonText="Like"
@@ -255,10 +266,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, }) => {
                 />
                 <StyledButton
                   textAlign={'center'}
-                  onClick={() => {
-                    console.log(post.postId)
-                    console.log(comment)
-                  }}
+                  onClick={commentClicked}
                   border={'none'}
                   mb='30px'
                   w='80px'

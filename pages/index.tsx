@@ -30,13 +30,7 @@ const Homepage = () => {
       }
     })
   };
-  const postComment = ({ id, comment }) => {
-    console.log("The comment from id :: ", id, " is ", comment)
-  }
 
-  const likePost = async ({ id }) => {
-    console.log("Liked the following id :: ", id)
-  }
 
 
   const [data, setData] = useState({
@@ -48,7 +42,7 @@ const Homepage = () => {
     isNft: true,
   })
   const [pageIsLoaded, setPageIsLoaded] = useState(false)
-  const { state } = useContext(AppState);
+  const { state, setState } = useContext(AppState);
   const btnRef = useRef()
 
   useEffect(() => {
@@ -60,6 +54,32 @@ const Homepage = () => {
       console.log("This is the state, ", state)
       setPageIsLoaded(true)
     }
+  }
+
+  const onLike = async ({ owner, id }) => {
+    console.log("Liking post", owner, id)
+    await state.UserContract.methods.likePost(owner, id, state.account).send({ from: state.account })
+    setState((val) => {
+      return {
+        ...val,
+        posts: val.posts.map((post) => {
+          if (post.postId === id) {
+            return {
+              ...post,
+              likes: parseInt(post.likes) + 1,
+            };
+          }
+          return post;
+        }),
+      };
+    }
+    )
+
+  }
+  const onComment = ({ owner, id, comment }) => {
+    console.log("This is the comment, ", comment)
+    console.log("This is the owner, ", owner)
+    console.log("This is the id, ", id)
   }
 
   return !pageIsLoaded ?
@@ -135,7 +155,7 @@ const Homepage = () => {
             justifyContent="center"
           >
             {state.posts.map((post, index) => {
-              return <PostTile post={post} />;
+              return <PostTile post={post} onLike={onLike} onComment={onComment} key={index} />;
             })}
           </Box>
         </Square>

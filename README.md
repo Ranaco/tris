@@ -51,8 +51,8 @@ Tris can be a great idea for next generation of social media as it not only  pro
 
 ## Future work
 
-- Use Meta transaction(gasless transaction) to reduce user costs and provide them m a better user experience.
-- Add support videos, gif, and other assets (currently only image is supported).
+- Use Meta transaction(gasless transaction) to reduce user costs and provide them a better user experience.
+- Add support for videos, gif, and other assets (currently only image is supported).
 - Add reporting on posts and comments.
 - Add advertisement option.
 - Update the marketplace. 

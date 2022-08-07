@@ -56,10 +56,10 @@ const ProfileButton = ({ name, image }) => {
         src={image}
         height='35px'
         width='35px'
-        style = {{
+        style={{
           borderRadius: '100px'
         }}
-        />
+      />
       <Text
         w="70px"
         overflow="hidden"
@@ -143,7 +143,7 @@ const Navbar = () => {
             color="lightGrey"
             size="30"
             style={{ cursor: "pointer" }}
-            onClick={() => console.log(state.User)}
+            onClick={() => router.push('/marketplace')}
           />
           <FaInbox color="lightGrey" size="30" style={{ cursor: "pointer" }} />
           <RiNotification4Fill

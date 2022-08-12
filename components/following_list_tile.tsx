@@ -1,7 +1,10 @@
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import { StyledDiv } from "../lib/custom-component";
 import Image from "next/image";
-import * as React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AppState } from '../pages/_app'
+import { parseUserData } from '../lib/ipfs-storage'
+
 
 interface FollowerTileInterface {
   profileUrl: string,
@@ -56,7 +59,43 @@ interface FollowingListTileInterface {
 }
 
 const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) => {
-  return (
+ 
+  const [ pageIsLoaded, setPageIsLoaded ] = useState(false) 
+  const [followingData, setFollowingData ] = useState([])
+  const { state } = useContext(AppState) 
+
+  useEffect(() => { 
+    loadPage().then((val) => {
+      if(val){
+        addFollowerData()
+      }
+    })
+  }, [])
+
+  const loadPage = async () => {
+    if (state.account !== "0x0") {
+      console.log("This is the state, ", state)
+      setPageIsLoaded(true)
+    return true 
+    }
+  }
+
+  const addFollowerData = async () => {
+    followers.map(async (address: any) =>  {
+      const currFollower = await state.UserContract.methods.getUserData(address).call() 
+      const parsedFollower = await parseUserData({ User: currFollower, posts: [] })
+      setFollowingData((val) => {
+        return[ 
+          ...val,
+          parsedFollower
+        ] 
+      })
+    }) 
+  }
+
+  return !pageIsLoaded ?
+  <Box></Box> : 
+    (
     <StyledDiv
       w="100%"
       bg="rgba(27, 39, 48, 0.5)"
@@ -72,7 +111,7 @@ const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) 
       <Text fontWeight="bold" alignSelf={"start"} p="10px" fontSize="22px">
         Who is following you
       </Text>
-      {followers.map((follower) => {
+      {followingData.map((follower) => {
         return (
           <FollowerTile
             profileUrl={follower.profileUrl}

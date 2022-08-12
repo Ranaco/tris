@@ -78,8 +78,9 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
     const currUser = await state.UserContract.methods.getUserData(post.seller).call()
     const parsedUser = await parseUserData({ User: currUser, posts: [] })
     setCurrentUser(parsedUser)
-    state.User
-      .following.includes(currUser.userAddress) ? setIsFollowed(true) : undefined
+    state.User.following.includes(currentUser.address) ? setIsFollowed(true) : undefined
+    console.log("This is the user we are checking at ::  ", currUser)
+    console.log("This is the following list :: ", state.User.following)
     return true
   }
 

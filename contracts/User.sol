@@ -215,7 +215,16 @@ contract UserContract is ReentrancyGuard{
         _postsOfUsers[account][id].isForSale = isForSale;
     }
 
-    
+    function follow (address follower, address account) public {
+     require(userIsRegistered[follower] == true, "User not registered");
+     require(userIsRegistered[account] == true, "User not registered"); 
+     User storage currUser = mapToUser[account];
+     User storage currFollower = mapToUser[follower];
+     currUser.followersCount += 1;
+     currFollower.followingCount += 1;
+     currUser.followers.push(follower);
+     currFollower.following.push(account);
+    }
 
     function getUserPosts(address sender) public view returns (Post[] memory userPosts){
         require(userIsRegistered[sender] == true, "User not registered.");

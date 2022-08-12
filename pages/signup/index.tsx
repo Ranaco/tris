@@ -198,7 +198,9 @@ const SignUp = () => {
             console.log('This is receipt, ', rec)
             console.log("This is the cid :: ", cid)
             window.localStorage.setItem("isAuthenticated", "true");
-            router.replace('/')
+            router.replace('/').then(() => {
+              location.reload()
+            })
           })
       });
     } else {
@@ -213,7 +215,9 @@ const SignUp = () => {
 
       state.UserContract.methods.createUser(state.account, userData.name, userData.userName, userData.avatarUrl, userData.email, userData.bio, userData.wallUrl).send({ from: state.account }).once('receipt', (rec) => {
         window.localStorage.setItem("isAuthenticated", "true");
-        router.replace('/')
+        router.replace('/').then(() => {
+          location.reload()
+        })
 
       })
     }

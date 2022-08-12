@@ -11,11 +11,11 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
     },
     matic: {
-      provider: () => new HDWalletProvider(mnemonic, `http://polygon-mumbai.g.alchemy.com/v2/${matic_key}`),
+      provider: () => new HDWalletProvider(mnemonic, `wss://polygon-mumbai.g.alchemy.com/v2/${matic_key}`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 300,
-      gas: 4700036,
+     // gas: 4700036,
       skipDryRun: false,
     },
   },

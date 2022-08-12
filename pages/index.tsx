@@ -30,8 +30,6 @@ const Homepage = () => {
     })
   };
 
-
-
   const [data, setData] = useState({
     title: "",
     post: "",
@@ -61,7 +59,7 @@ const Homepage = () => {
     setState((val) => {
       return {
         ...val,
-        posts: val.posts.map((post) => {
+        posts: val.posts.map((post: any) => {
           if (post.postId === id) {
             return {
               ...post,
@@ -124,7 +122,7 @@ const Homepage = () => {
                 followers={state.User.followersCount}
                 bio={state.User.bio}
               />
-              <FollowingListTile followers={dummy_data} />
+              <FollowingListTile followers={state.User.following} />
             </Box>
           </Hide>
         </Show>

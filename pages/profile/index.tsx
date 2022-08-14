@@ -43,9 +43,11 @@ const Profile = () => {
   const logOut = async () => {
     const val = await state.disconnectWallet()
     if (val) {
-      window.localStorage.setItem('isAuthenticated', 'false')
-      router.replace('/login').then((val) => {
-        location.reload()
+      router.replace('/login').then(() => {
+        window.localStorage.setItem('isAuthenticated', 'false')
+        setTimeout(() => {
+          location.reload()
+        }, 1000)
       })
     }
   }

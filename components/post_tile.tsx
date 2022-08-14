@@ -74,6 +74,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
     }
 
   }
+
   const getUser = async () => {
     const currUser = await state.UserContract.methods.getUserData(post.seller).call()
     const parsedUser = await parseUserData({ User: currUser, posts: [] })

@@ -2,7 +2,6 @@ import ProfileCard from "../components/profile_card";
 import FollowingListTile from "../components/following_list_tile";
 import { AppState } from "./_app";
 import WallUrl from "../public/images/landscape.png";
-import dummy_data from "../lib/dummy_data";
 import CreatePostTile from "../components/create_post_tile";
 import React, { useState, useContext, useEffect, useRef } from "react";
 import PostTile from "../components/post_tile";

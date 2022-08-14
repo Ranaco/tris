@@ -9,14 +9,14 @@ import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
 import getWindowDimensions from "../../lib/device-viewport";
 import TrisLogo from "../../components/logo";
-import Web3Modal, { local } from "web3modal";
+import Web3Modal from "web3modal";
 import { sequence } from "0xsequence";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { ethers } from "ethers";
 import MetaMaskLogo from "../../public/icons/metamask.png";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AppState } from "../_app";
 
 let providerOptions: any;
@@ -36,7 +36,7 @@ if (typeof window !== "undefined") {
   }
 }
 
-let web3Modal;
+let web3Modal: any;
 
 if (typeof window !== "undefined") {
   web3Modal = new Web3Modal({
@@ -62,14 +62,6 @@ const Login = () => {
     }
   }, []);
 
-  const handleRouter = async () => {
-    const currUser = await state.UserContract.methods.getUserData().send({
-      from: state.account,
-    }).then((res) => {
-
-    })
-  }
-
   const connectWeb3Modal = async () => {
     if (web3Modal.cachedProvider) {
       web3Modal.clearCachedProvider();
@@ -78,7 +70,7 @@ const Login = () => {
   };
 
   const connectWallet = async () => {
-    let prov
+    let prov: any
     console.log("Connecting wallet");
     const wallet = await web3Modal.connect();
     const provider: any = new ethers.providers.Web3Provider(wallet);
@@ -95,17 +87,24 @@ const Login = () => {
     })
     prov = provider
     console.log("This is the provider:: ", prov);
-    await getAccounts(prov).then((account) => {
-      console.log("This is the localStorage value :: ", window.localStorage.getItem("isAuthenticated"));
-      if (account !== undefined && state.isRegistered === false) {
+    if(state.UserContract !== undefined){
+      getAccounts(prov).then(async (account) => {
+      window.localStorage.setItem('isAuthenticated', 'true')
+      const isRegistered = await state.UserContract.methods.userIsRegistered(account).call() 
+      console.log("This is all data Account", account,)
+        console.log("isRegistered", isRegistered)
+        console.log("localStorage", window.localStorage.getItem('isAuthenticated'))
+      if (account !== undefined && isRegistered === false) {
         router.replace("/signup");
-      } else if (account !== undefined && state.isRegistered === true) {
+      } else if (account !== undefined && window.localStorage.getItem('isAuthenticated') === 'true' && isRegistered == true) {
         router.replace("/");
       }
     });
+    } else {
+    } 
   };
 
-  const getAccounts = async (provider) => {
+  const getAccounts = async (provider: any) => {
     if (provider != null) {
       const signer = provider.getSigner();
       const account = await signer.getAddress();

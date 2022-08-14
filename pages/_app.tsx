@@ -111,8 +111,8 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
         return true
       } catch (err) {
         console.log(err)
-        return false
       }
+      return false
     }
 
     const connect = async () => {

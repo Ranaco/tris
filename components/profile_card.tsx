@@ -65,7 +65,6 @@ interface ProfileCardInterface {
 const ProfileCard: React.FC<ProfileCardInterface> = ({
   following,
   profileUrl,
-  wallUrl,
   followers,
   name,
   userName,

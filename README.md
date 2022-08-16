@@ -11,7 +11,7 @@
 
 ## Introuction
 
-Whenever we hear of a social media app, what comes in mind is a heavy app where you can upload and share phtos and  that's it. But Tris is way different than any social media you would have ever heard of
+Whenever we hear of a social media app, what comes in mind is a heavy app where you can upload and share phtos and  that's it. But Tris is way different than any social media you would have ever heard of.
 Almost every day we come to know about some data leak from tech giants which results to loss of privacy and much more. And over that what can you hope from a social media?(except of uploading posts and connecting to communnity) Well, this is where Tris comes in. You are super secure with Tris, because all your data is stored in blockchain, and over that you can earn from your posts!
 
 ## Platform Overview

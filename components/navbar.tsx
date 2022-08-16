@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from 'react'
 import { AppState } from "../pages/_app";
 import Image from 'next/image'
+import TrisLogo from '../public/icons/tris_logo.png'
 
 const CapsuleSearchBar = ({ handleChange, query }) => {
   const size = getWindowDimensions();
@@ -127,6 +128,9 @@ const Navbar = () => {
         alignItems="center"
         justifyContent="start"
       >
+        <Box bg='blue'>
+          <Image src={TrisLogo} alt='Tris logo' height={'60px'} width='60px' />
+        </Box>
         {size.width < "710" ? undefined : (
           <CapsuleSearchBar handleChange={handleChange} query={query} />
         )}{" "}

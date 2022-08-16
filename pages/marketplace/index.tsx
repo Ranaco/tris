@@ -3,6 +3,8 @@ import { SimpleGrid, Text } from '@chakra-ui/react'
 import mix from '../../public/images/mix.png'
 import Image from 'next/image'
 import NftCard from '../../components/nft_card'
+import { useState, useEffect, useContext } from 'react'
+import { AppState } from '../_app'
 
 const CustomHeader = () => {
   return (
@@ -16,9 +18,9 @@ const CustomHeader = () => {
     >
       <StyledDiv
         flex='1'
-        display = 'flex'
+        display='flex'
         flexDirection={'column'}
-        alignItems = 'start'
+        alignItems='start'
         justifyContent={'center'}
         p='60px'
         m='0'
@@ -29,10 +31,10 @@ const CustomHeader = () => {
         <Text fontSize={'1.5em'} color='grey'>
           The official Tris store
         </Text>
-        <Text 
+        <Text
           pt='30px'
-          fontSize={'1.8em'} 
-          color = 'grey' 
+          fontSize={'1.8em'}
+          color='grey'
           fontFamily='Shadows Into Light'>
           The one place for all your buying and selling of posts on Tris network.
         </Text>
@@ -50,37 +52,71 @@ const CustomHeader = () => {
 }
 
 const Marketplace = () => {
-  return (
+
+  const { state } = useContext(AppState)
+  const [nft, setNft] = useState([])
+  const [isPageLoaded, setIsPageLoaded] = useState(false)
+
+  useEffect(() => {
+    loadState()
+  }, [state.account, state.posts])
+
+  const loadState = () => {
+    if(state.account !== "0x0"){
+      setIsPageLoaded(true)
+    } 
+    loadNft()
+  }
+
+  const loadNft = async () => {
+    
+    const currNfts = state.posts.filter(checkIsNft)
+
+    console.log(currNfts)
+    setNft(currNfts) 
+  }
+
+  const checkIsNft = (nft: any) =>  {
+    return nft.isNft == true && nft.isForSale == true
+  }
+
+  return !isPageLoaded ?
+  <StyledDiv></StyledDiv> :
+  (
     <StyledDiv
       w='100%'
-      h='100%'
-      pt='60px'
-      gap = '30px'
+      overflowY='scroll'
+      pt='100px'
       flexDirection={'column'}
       display='flex'
+      gap='30px'
       alignItems={'center'}
       justifyContent='start'
+      pb='30px'
     >
       <StyledDiv
-        m='20px'
         w='98%'
         borderRadius={'20px'}
-        h='45%'
         minH={'500px'}
         bg="rgba(27, 39, 48, 0.5)"
         css={{ backdropFilter: 'blur(30px)' }}>
         <CustomHeader />
       </StyledDiv>
-    <SimpleGrid columns={[1, 1, 3]} p = '30px' gap = '80px' >
-       <NftCard 
-          title={'Nft'} 
-          url={'https://ipfs.io/ipfs/bafybeievkw7lmdiwtfi7i4ywjzt2sbcdoptp7aai45y5zzvbqgyat7lfwq/1660293481670.png?imwidth=128'} 
-          price = '30'
-          basePrice = '40'
-          onSold={() =>{console.log("Nft clicked")}}
-          owner = "any"
-          /> 
-     </SimpleGrid> 
+      <SimpleGrid pt = '60px' columns={[1, 1, 3]} rowGap='140px' gap='80px' >
+       {
+          nft.map((n) =>  {
+            return <NftCard
+              title={n.title} 
+              url={n.post}
+              owner={n.seller}
+              price={n.priceByOwner}  
+              basePrice={n.basePrice}
+              onSold={n.onSold}
+              key={n.postId}
+              />
+          })
+        } 
+      </SimpleGrid>
     </StyledDiv>
   )
 }

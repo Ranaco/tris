@@ -67,12 +67,12 @@ Tris can be a great idea for next generation of social media as it not only  pro
     📦 Tris
      ┣ 📂 .github
      ┣ 📂 node_modules
-     ┣ 📜 components (Custom components directory)
+     ┣ 📂 components (Custom components directory)
      ┣ 📂 contract (Solidity Smart Contracts)
      ┣ 📂 migrations (Truffle deployment migrations)
      ┣ 📂 test (Smart Contract Tests)
      ┣ 📂 pages (Pages and _app configuration)
-     ┣ 📜 lib (For IPFS, data parising and login methods)
+     ┣ 📂 lib (For IPFS, data parising and login methods)
      ┣ 📜 package.json (project dependencies)
      ┣ 📜 README.md (Project Documentation)
      ┣ 📜 public (Public assets directory)

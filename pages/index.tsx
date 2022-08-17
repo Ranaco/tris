@@ -72,10 +72,24 @@ const Homepage = () => {
     )
 
   }
-  const onComment = ({ owner, id, comment }) => {
-    console.log("This is the comment, ", comment)
-    console.log("This is the owner, ", owner)
-    console.log("This is the id, ", id)
+  const onComment = async ({ owner, id, comment }) => {
+    console.log("These are the details for the comment, owner :: ", owner, " id :: ", id, " comment :: ", comment)
+    await state.UserContract.methods.postComment(owner, comment, id, state.account).send({ from: state.account })
+    setState((val) => {
+      return {
+        ...val,
+        posts: val.posts.map((post: any) => {
+          if (post.postId === id) {
+            return {
+              ...post,
+              comments: [...post.comments, comment],
+              commentsCount: parseInt(post.commentsCount) + 1,
+            };
+          }
+          return post;
+        }),
+      };
+    })
   }
 
   return !pageIsLoaded ?

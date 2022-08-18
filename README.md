@@ -37,17 +37,19 @@ Tris can be a great idea for next generation of social media as it not only  pro
 
 ## Tech Stack Used
 
-- Polygon 
+- Polygon (Contract deployment )
+- Sequence ( Web3 wallet service )
+- Alchemy ( Contract management service )
+- Spheron ( Service provider for hosting )
+- Filecoin ( Hosting server )
 - Next js
 - Chakra-ui
 - Web3
 - Typescript
-- NFT.Storage
+- NFT.Storage ( IPFS storage )
 - Framer motion
-- Web3
 - Truffle
 - Chai js
-- OpenZeppelin
 
 ## Contract deployment links
 - [Tris NFT Contract](https://mumbai.polygonscan.com/address/0x46C98595a9D8C83dfE6dfF11A0F6b47bEb7Fe7aD)

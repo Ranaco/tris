@@ -52,8 +52,8 @@ Tris can be a great idea for next generation of social media as it not only  pro
 - Chai js
 
 ## Contract deployment links
-- [Tris NFT Contract](https://mumbai.polygonscan.com/address/0x46C98595a9D8C83dfE6dfF11A0F6b47bEb7Fe7aD)
-- [Tris User/Marketplace Contract](https://mumbai.polygonscan.com/address/0x9FD8476bC9D4D7A7eb3F8E99162B0f49424672b5)
+- [Tris NFT Contract](https://mumbai.polygonscan.com/address/0x2dbdED251469946F8F8a9778Af5eFF8E52aC03c3)
+- [Tris User/Marketplace Contract](https://mumbai.polygonscan.com/address/0x2789D7145f34E22A4552aE42a2974289826BF364)
 
 ## Future work
 

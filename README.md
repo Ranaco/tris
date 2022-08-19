@@ -37,21 +37,23 @@ Tris can be a great idea for next generation of social media as it not only  pro
 
 ## Tech Stack Used
 
-- Polygon 
+- Polygon (Contract deployment )
+- Sequence ( Web3 wallet service )
+- Alchemy ( Contract management service )
+- Spheron ( Service provider for hosting )
+- Filecoin ( Hosting server )
 - Next js
 - Chakra-ui
 - Web3
 - Typescript
-- NFT.Storage
+- NFT.Storage ( IPFS storage )
 - Framer motion
-- Web3
 - Truffle
 - Chai js
-- OpenZeppelin
 
 ## Contract deployment links
-- [Tris NFT Contract](https://mumbai.polygonscan.com/address/0x46C98595a9D8C83dfE6dfF11A0F6b47bEb7Fe7aD)
-- [Tris User/Marketplace Contract](https://mumbai.polygonscan.com/address/0x9FD8476bC9D4D7A7eb3F8E99162B0f49424672b5)
+- [Tris NFT Contract](https://mumbai.polygonscan.com/address/0xe480D513335DbD098938d988AeaCa4B4A6a827E1)
+- [Tris User/Marketplace Contract](https://mumbai.polygonscan.com/address/0x6Fe0E6C87134A928b08A5cb858F381C7909379BE)
 
 ## Future work
 
@@ -75,6 +77,6 @@ Tris can be a great idea for next generation of social media as it not only  pro
      ┣ 📂 lib (For IPFS, data parising and login methods)
      ┣ 📜 package.json (project dependencies)
      ┣ 📜 README.md (Project Documentation)
-     ┣ 📜 public (Public assets directory)
+     ┣ 📂 public (Public assets directory)
      ┗ 📜 truffle-config.js (Truffle Project Config)
  ```

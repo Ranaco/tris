@@ -77,6 +77,6 @@ Tris can be a great idea for next generation of social media as it not only  pro
      ┣ 📂 lib (For IPFS, data parising and login methods)
      ┣ 📜 package.json (project dependencies)
      ┣ 📜 README.md (Project Documentation)
-     ┣ 📜 public (Public assets directory)
+     ┣ 📂 public (Public assets directory)
      ┗ 📜 truffle-config.js (Truffle Project Config)
  ```

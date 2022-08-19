@@ -140,8 +140,8 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
   }, [state.account]);
 
-  function shuffle(array) {
-    let currentIndex = array.length, randomIndex;
+  function shuffle(array: any) {
+    let currentIndex = array.length, randomIndex: any;
 
     while (currentIndex != 0) {
 
@@ -154,6 +154,18 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
 
     return array;
   }
+
+  const getAllPosts = async ({ UserContract }) => {
+    const userList = await UserContract.methods.getUserList().call()
+    let posts = [];
+    for (var i = 0; i < userList.length; i++) {
+      const currPost = await UserContract.methods.getUserPosts(userList[i].userAddress).call()
+      posts = [...posts, ...currPost]
+    }
+    console.log(posts)
+    return posts
+  }
+
   const getRegisteredUser = async ({ UserContract, account }) => {
     let isIt: boolean
     let currUser: any;
@@ -164,7 +176,7 @@ const Website: React.FC<WebsiteInterface> = ({ Component, pageProps }) => {
           currUser = await UserContract.methods.getUserData(account).call()
           const posts = await UserContract.methods.getUserPosts(account).call()
           const user = await parseUserData({ User: currUser, posts: posts })
-          let frozenPosts = await UserContract.methods.getAllPost(account).call()
+          let frozenPosts = await getAllPosts({ UserContract: UserContract })
           let allPosts = JSON.parse(JSON.stringify(frozenPosts))
           allPosts = allPosts.map((post: any) => {
             return {

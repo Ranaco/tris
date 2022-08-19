@@ -201,6 +201,7 @@ contract UserContract is ReentrancyGuard{
         currPost.seller = payable(newOwnerAddress);
         removePost(postId, ownerAddress);
         currPost.postIsBought = true;
+        currPost.isForSale = false;
         _postsOfUsers[newOwnerAddress][postId] = currPost;
         delete _postsOfUsers[ownerAddress][postId];
         newUser.postCount.push(postId);
@@ -262,6 +263,12 @@ contract UserContract is ReentrancyGuard{
         currPost.likes += 1;
     }
 
+    function getComment ( address postOwner, bytes32 postId, address sender ) public view returns(string[] memory){
+        require(userIsRegistered[sender] && userIsRegistered[postOwner] == true, "User not registered");
+        Post storage currPost = _postsOfUsers[postOwner][postId];
+        return currPost.comments;
+    }
+
     function postComment( address postOwner, string memory comment, bytes32 postId, address sender ) public {
         require(userIsRegistered[sender] == true, "User not registered");
         Post storage currPost = _postsOfUsers[postOwner][postId];
@@ -269,25 +276,12 @@ contract UserContract is ReentrancyGuard{
         currPost.comments.push(comment);
     }
 
-    function getAllPost(address userAddress) public view returns(Post[] memory){
-        require(userIsRegistered[userAddress] == true, "User not registered.");
-        uint256 allPostCount = totalPostCount.current();
-        uint256 currentIndex = 0;
-        Post[] memory posts = new Post[](allPostCount);
-        for(uint i = 1; i <= allPostCount; i++){
-            Post storage currPost = totalPost[i];
-            posts[currentIndex] = currPost;
-            currentIndex += 1;
-        }
-        return posts;
-    } 
-
     function getUserData(address account) public view returns(User memory){
         require(userIsRegistered[account] == true, "User not registered.");
         return mapToUser[account];
-    } 
+    }
 
-    function callKeccak256(string memory post) public pure returns( bytes32 result){
+    function callKeccak256(string memory post) private pure returns( bytes32 result){
       return keccak256(abi.encodePacked(post));
    }  
 

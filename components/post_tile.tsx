@@ -80,7 +80,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
     const parsedUser = await parseUserData({ User: currUser, posts: [] })
     setCurrentUser(parsedUser)
     state.User
-      .following.includes(currUser.userAddress) ? setIsFollowed(true) : undefined
+      .following.includes(currUser.userAddress) || state.account == currUser.userAddress ? setIsFollowed(true) : undefined
     return true
   }
 

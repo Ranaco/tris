@@ -56,9 +56,10 @@ const Login = () => {
         connectWallet();
       }
     }
-    console.log("This is the state", state);
     if (window.localStorage.getItem("isAuthenticated") == "true") {
-      router.push("/");
+      router.push("/").then(() => {
+        location.reload()
+      });
     }
   }, []);
 
@@ -87,21 +88,23 @@ const Login = () => {
     })
     prov = provider
     console.log("This is the provider:: ", prov);
-    if(state.UserContract !== undefined){
+    if (state.UserContract !== undefined) {
       getAccounts(prov).then(async (account) => {
-      window.localStorage.setItem('isAuthenticated', 'true')
-      const isRegistered = await state.UserContract.methods.userIsRegistered(account).call() 
-      console.log("This is all data Account", account,)
+        window.localStorage.setItem('isAuthenticated', 'true')
+        const isRegistered = await state.UserContract.methods.userIsRegistered(account).call()
+        console.log("This is all data Account", account,)
         console.log("isRegistered", isRegistered)
         console.log("localStorage", window.localStorage.getItem('isAuthenticated'))
-      if (account !== undefined && isRegistered === false) {
-        router.replace("/signup");
-      } else if (account !== undefined && window.localStorage.getItem('isAuthenticated') === 'true' && isRegistered == true) {
-        router.replace("/");
-      }
-    });
+        if (account !== undefined && isRegistered === false) {
+          router.replace("/signup");
+        } else if (window.localStorage.getItem('isAuthenticated') === 'true' && isRegistered == true) {
+          router.replace("/").then(() => {
+            location.reload()
+          });
+        }
+      });
     } else {
-    } 
+    }
   };
 
   const getAccounts = async (provider: any) => {

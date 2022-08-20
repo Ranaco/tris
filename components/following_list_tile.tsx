@@ -90,7 +90,7 @@ const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) 
           parsedFollower
         ] 
       })
-    }) 
+    })
   }
 
   return !pageIsLoaded ?

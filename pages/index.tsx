@@ -135,7 +135,7 @@ const Homepage = () => {
                 followers={state.User.followersCount}
                 bio={state.User.bio}
               />
-              <FollowingListTile followers={state.User.following} />
+              <FollowingListTile followers={state.User.followers} />
             </Box>
           </Hide>
         </Show>

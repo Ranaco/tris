@@ -47,7 +47,7 @@ const Profile = () => {
         window.localStorage.setItem('isAuthenticated', 'false')
         setTimeout(() => {
           location.reload()
-        }, 1000)
+        }, 3000)
       })
     }
   }

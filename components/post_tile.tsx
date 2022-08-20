@@ -55,6 +55,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
   const [commentOn, setCommentOn] = useState(false)
   const [comment, setComment] = useState('')
   const [isFollowed, setIsFollowed] = useState(false)
+  const [postComments, setPostComments] = useState([])
 
   const [isLoaded, setIsLoaded] = useState(false)
   useEffect(() => {
@@ -68,6 +69,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
     if (state.account !== "0x0") {
       getUser().then((val) => {
         if (val) {
+          getComments()
           setIsLoaded(val)
         }
       })
@@ -82,6 +84,11 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
     state.User
       .following.includes(currUser.userAddress) || state.account == currUser.userAddress ? setIsFollowed(true) : undefined
     return true
+  }
+
+  const getComments = async () => {
+    const comments = await state.UserContract.methods.getComment(post.seller, post.postId, state.account).call()
+    setPostComments(comments)
   }
 
   const follow = ({ ownerAddress }) => {
@@ -178,14 +185,14 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
           justifyContent="start"
         >
           <Text fontSize="1.3em">{post.title}</Text>
-          <Box w="87%" h="20%" pb="30px" pt='20px'>
+          <Box w="87%" h="16%" pb="30px" pt='20px'>
             <Image
               style={{ borderRadius: "20px" }}
               src={url}
               alt={post.title}
               layout="responsive"
               width="100%"
-              height="75%"
+              height="70%"
             />
           </Box>
         </Box>
@@ -232,23 +239,9 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
           {
             commentOn &&
             (
-              <StyledDiv
-                gap='10px'
-                initial={{
-                  opacity: 0,
-                  height: '0px'
-                }}
-                animate={{
-                  opacity: 1,
-                  height: '50px'
-                }}
-                exit={{
-                  opacity: 0,
-                  height: '0px'
-                }}
-
-                w='100%' display={'flex'} alignItems='center' justifyContent='center'>
-                <StyledInput
+              <StyledDiv w='100%'>
+                <StyledDiv
+                  gap='10px'
                   initial={{
                     opacity: 0,
                     height: '0px'
@@ -261,48 +254,103 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
                     opacity: 0,
                     height: '0px'
                   }}
-                  h='50px'
-                  css={{
-
-                  }}
-                  pl='10px'
-                  mb='30px'
-                  bg='blackAlpha.200'
-                  border={'none'}
-                  placeholder='...'
-                  w="67%"
-                  borderRadius={'5px'}
-                  alignSelf={'center'}
-                  pt='10px'
-                  fontSize={'1.3em'}
-                  _placeholder={{
-                    fontSize: '30px',
-                  }}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-                <StyledButton
-                  textAlign={'center'}
-                  onClick={commentClicked}
-                  border={'none'}
-                  mb='30px'
-                  w='80px'
-                  bg='blackAlpha.300'
-                  initial={{
-                    opacity: 0,
-                    height: '0px'
-                  }}
-                  animate={{
-                    opacity: 1,
-                    height: '50px'
-                  }}
-                  exit={{
-                    opacity: 0,
-                    height: '0px'
-                  }}
-
-                >
-                  Post
-                </StyledButton>
+                  w='100%'
+                  flexDir={'column'}
+                  display={'flex'}
+                  alignItems='center'
+                  justifyContent='center'>
+                  <StyledDiv w='100%' display={'flex'} alignItems='center' justifyContent={'center'}>
+                    <StyledInput
+                      initial={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: '50px'
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                      h='50px'
+                      pl='10px'
+                      mb='30px'
+                      bg='blackAlpha.200'
+                      border={'none'}
+                      placeholder='...'
+                      w="67%"
+                      borderRadius={'5px'}
+                      alignSelf={'center'}
+                      pt='10px'
+                      fontSize={'1.3em'}
+                      _placeholder={{
+                        fontSize: '30px',
+                      }}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                    <StyledButton
+                      textAlign={'center'}
+                      onClick={commentClicked}
+                      border={'none'}
+                      mb='30px'
+                      w='80px'
+                      bg='blackAlpha.300'
+                      initial={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: '50px'
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                    >
+                      Post
+                    </StyledButton>
+                  </StyledDiv>
+                </StyledDiv>
+                {
+                  postComments.length !== 0 ? (
+                    <StyledDiv
+                      initial={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: '100%'
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: '0px'
+                      }}
+                      pb='10px'
+                      pl='90px' display='flex' flexDir={'column'} alignItems='start' justifyContent={'start'}>
+                      <Text
+                        pt='10px'
+                        color={'whiteAlpha.800'}
+                        fontSize={'1.8em'}
+                        pb='15px'>
+                        Comments
+                      </Text>
+                      {
+                        postComments.map((comment) => {
+                          return (
+                            <li>
+                              <Text p='5px' fontSize={'1.3em'} color='grey'>
+                                {comment}
+                              </Text>
+                            </li>
+                          )
+                        })
+                      }
+                    </StyledDiv>
+                  ) : undefined
+                }
               </StyledDiv>
             )
           }

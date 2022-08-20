@@ -59,14 +59,14 @@ interface FollowingListTileInterface {
 }
 
 const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) => {
- 
-  const [ pageIsLoaded, setPageIsLoaded ] = useState(false) 
-  const [followingData, setFollowingData ] = useState([])
-  const { state } = useContext(AppState) 
 
-  useEffect(() => { 
+  const [pageIsLoaded, setPageIsLoaded] = useState(false)
+  const [followingData, setFollowingData] = useState([])
+  const { state } = useContext(AppState)
+
+  useEffect(() => {
     loadPage().then((val) => {
-      if(val){
+      if (val) {
         addFollowerData()
       }
     })
@@ -76,55 +76,58 @@ const FollowingListTile: React.FC<FollowingListTileInterface> = ({ followers }) 
     if (state.account !== "0x0") {
       console.log("This is the state, ", state)
       setPageIsLoaded(true)
-    return true 
+      return true
     }
   }
 
   const addFollowerData = async () => {
-    followers.map(async (address: any) =>  {
-      const currFollower = await state.UserContract.methods.getUserData(address).call() 
+
+    let followerData = []
+
+    followers.map(async (address: any) => {
+      const currFollower = await state.UserContract.methods.getUserData(address).call()
       const parsedFollower = await parseUserData({ User: currFollower, posts: [] })
-      setFollowingData((val) => {
-        return[ 
-          ...val,
-          parsedFollower
-        ] 
-      })
+      followerData = [...followerData, parsedFollower]
+      setFollowingData(followerData)
     })
   }
 
   return !pageIsLoaded ?
-  <Box></Box> : 
+    <Box></Box> :
     (
-    <StyledDiv
-      w="100%"
-      bg="rgba(27, 39, 48, 0.5)"
-      css={{ backdropFilter: 'blur(30px)' }}
-      borderRadius="20px"
-      p="20px"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      gap="10px"
-      flexDirection="column"
-    >
-      <Text fontWeight="bold" alignSelf={"start"} p="10px" fontSize="22px">
-        Who is following you
-      </Text>
-      {followingData.map((follower) => {
-        return (
-          <FollowerTile
-            profileUrl={follower.profileUrl}
-            name={follower.name}
-            userName={follower.userName}
-          />
-        );
-      })}
-      <Text cursor="pointer" color="blue" fontSize="1em" alignSelf="start">
-        Show More
-      </Text>
-    </StyledDiv>
-  );
+      <StyledDiv
+        w="100%"
+        bg="rgba(27, 39, 48, 0.5)"
+        css={{ backdropFilter: 'blur(30px)' }}
+        borderRadius="20px"
+        p="20px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        gap="10px"
+        flexDirection="column"
+      >
+        <Text fontWeight="bold" alignSelf={"start"} p="10px" fontSize="22px">
+          Who is following you
+        </Text>
+        {followingData.map((follower) => {
+          return (
+            <FollowerTile
+              profileUrl={follower.profileUrl}
+              name={follower.name}
+              userName={follower.userName}
+            />
+          );
+        })}
+        {
+          followingData.length > 3 ? (
+            <Text cursor="pointer" color="blue" fontSize="1em" alignSelf="start">
+              Show More
+            </Text>
+          ) : undefined
+        }
+      </StyledDiv>
+    );
 };
 
 export default FollowingListTile;

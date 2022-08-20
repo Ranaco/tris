@@ -35,11 +35,10 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
 }) => {
   const [progress, setProgress] = useState<string>('No file')
   const [file, setFile] = useState<any>([])
-  const { state, setState } = useContext(AppState)
+  const { state } = useContext(AppState)
   const { getRootProps, getInputProps, isDragActive } =
     useDropzone({
       onDrop: (acceptedfile) => {
-        const file = acceptedfile[0];
         setFile(
           acceptedfile.map((file) => {
             return Object.assign(file, {
@@ -152,7 +151,8 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
       onCloseComplete={resetState}
     >
       <DrawerOverlay bg={'rgba(27, 39, 48, 0.7)'} css={{ backdropFilter: 'blur(10px)' }} />
-      <DrawerContent backgroundColor='textGrey'>
+      <DrawerContent backgroundColor="rgba(27, 39, 48, 0.5)"
+        css={{ backdropFilter: 'blur(30px)' }}>
         <DrawerCloseButton />
         <DrawerHeader textAlign={'center'}>
           Create your TrisNFT

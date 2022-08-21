@@ -62,7 +62,7 @@ const Profile = () => {
         alignItems={'center'}
         justifyContent={'center'}
         w='100%'
-        h='100%'
+        h='100vh'
         p='20px'
         gap='20px'
       >

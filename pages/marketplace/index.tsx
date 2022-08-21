@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 import Image from 'next/image'
 import NftCard from '../../components/nft_card'
 import { useState, useEffect, useContext } from 'react'
+import { useRouter } from  'next/router'
 import { AppState } from '../_app'
 import getWindowDimensions from '../../lib/device-viewport' 
 
@@ -57,7 +58,8 @@ const CustomHeader = () => {
 }
 
 const Marketplace = () => {
-
+  
+  const router  = useRouter()
   const { state } = useContext(AppState)
   const [nft, setNft] = useState([])
   const [isPageLoaded, setIsPageLoaded] = useState(false)
@@ -101,9 +103,11 @@ const Marketplace = () => {
           duration: 5000,
           isClosable: true,
         })
-        setTimeout(() => {
+       setTimeout(() => {
+         router.replace('/').then(() => {
           location.reload()
-        }, 5000) 
+        }, 5000)
+       }) 
       })
     } 
   }

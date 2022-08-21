@@ -346,8 +346,7 @@ const PostTile: React.FC<PostTileInterface> = ({ post, onLike, onComment }) => {
                               </Text>
                             </li>
                           )
-                        })
-                      }
+                        })}
                     </StyledDiv>
                   ) : undefined
                 }

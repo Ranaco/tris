@@ -103,11 +103,11 @@ const Marketplace = () => {
           duration: 5000,
           isClosable: true,
         })
-       setTimeout(() => {
-         router.replace('/').then(() => {
-          location.reload()
-        }, 5000)
-       }) 
+        setTimeout(() => {
+          router.replace("/").then(() => {
+            location.reload()
+          })
+        })
       })
     } 
   }

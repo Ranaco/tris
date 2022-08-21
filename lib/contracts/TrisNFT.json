@@ -34362,12 +34362,12 @@
     "80001": {
       "events": {},
       "links": {},
-      "address": "0xe480D513335DbD098938d988AeaCa4B4A6a827E1",
-      "transactionHash": "0xb9e42bc70992301703db1e412e7f9423afa0479dc95366e8eb01cb2f8b0ba155"
+      "address": "0x755EF98BcC35C50E302899848F8c16aaef930aB3",
+      "transactionHash": "0x620e1988e0281d84b206151a6fdbda50fbae6fab200ecccd34e8853fad484763"
     }
   },
   "schemaVersion": "3.4.9",
-  "updatedAt": "2022-08-19T09:49:23.488Z",
+  "updatedAt": "2022-08-21T08:33:53.989Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -1,10 +1,4 @@
-import {
-  Text,
-  Flex,
-  Show,
-  Hide,
-  Button,
-} from "@chakra-ui/react";
+import { Text, Flex, Show, Hide, Button } from "@chakra-ui/react";
 import { StyledDiv } from "../../lib/custom-component";
 import Layout from "../../components/layouts/secondary";
 import getWindowDimensions from "../../lib/device-viewport";
@@ -58,7 +52,7 @@ const Login = () => {
     }
     if (window.localStorage.getItem("isAuthenticated") == "true") {
       router.push("/").then(() => {
-        location.reload()
+        location.reload();
       });
     }
   }, []);
@@ -71,7 +65,7 @@ const Login = () => {
   };
 
   const connectWallet = async () => {
-    let prov: any
+    let prov: any;
     console.log("Connecting wallet");
     const wallet = await web3Modal.connect();
     const provider: any = new ethers.providers.Web3Provider(wallet);
@@ -84,22 +78,30 @@ const Login = () => {
       return {
         ...val,
         provider: provider,
-      }
-    })
-    prov = provider
+      };
+    });
+    prov = provider;
     console.log("This is the provider:: ", prov);
     if (state.UserContract !== undefined) {
       getAccounts(prov).then(async (account) => {
-        window.localStorage.setItem('isAuthenticated', 'true')
-        const isRegistered = await state.UserContract.methods.userIsRegistered(account).call()
-        console.log("This is all data Account", account,)
-        console.log("isRegistered", isRegistered)
-        console.log("localStorage", window.localStorage.getItem('isAuthenticated'))
+        window.localStorage.setItem("isAuthenticated", "true");
+        const isRegistered = await state.UserContract.methods
+          .userIsRegistered(account)
+          .call();
+        console.log("This is all data Account", account);
+        console.log("isRegistered", isRegistered);
+        console.log(
+          "localStorage",
+          window.localStorage.getItem("isAuthenticated")
+        );
         if (account !== undefined && isRegistered === false) {
           router.replace("/signup");
-        } else if (window.localStorage.getItem('isAuthenticated') === 'true' && isRegistered == true) {
+        } else if (
+          window.localStorage.getItem("isAuthenticated") === "true" &&
+          isRegistered == true
+        ) {
           router.replace("/").then(() => {
-            location.reload()
+            location.reload();
           });
         }
       });
